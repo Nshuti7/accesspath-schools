@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/auth_provider.dart';
+import '../../router.dart';
 import '../../strings.dart';
 
 /// Placeholder so the router has somewhere to send logged-in users.
@@ -21,7 +23,23 @@ class DashboardScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: const Center(child: Text('Dashboard coming soon')),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('Dashboard coming soon'),
+              const SizedBox(height: 24),
+              FilledButton.icon(
+                onPressed: () => context.go(AppRoutes.areas),
+                icon: const Icon(Icons.checklist),
+                label: const Text(AppStrings.startAssessment),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

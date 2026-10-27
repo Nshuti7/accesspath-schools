@@ -1,14 +1,18 @@
 import 'package:go_router/go_router.dart';
 
 import 'providers/auth_provider.dart';
+import 'screens/areas/areas_screen.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/auth/sign_up_screen.dart';
+import 'screens/checklist/checklist_screen.dart';
 import 'screens/dashboard/dashboard_screen.dart';
 
 class AppRoutes {
   static const login = '/login';
   static const signUp = '/sign-up';
   static const dashboard = '/';
+  static const areas = '/areas';
+  static String checklist(String areaId) => '/areas/$areaId';
 }
 
 GoRouter buildRouter(AuthProvider auth) {
@@ -41,6 +45,20 @@ GoRouter buildRouter(AuthProvider auth) {
       GoRoute(
         path: AppRoutes.dashboard,
         builder: (context, state) => const DashboardScreen(),
+        // Nested so the app bar back arrow returns Checklist -> Areas -> Dashboard.
+        routes: [
+          GoRoute(
+            path: 'areas',
+            builder: (context, state) => const AreasScreen(),
+            routes: [
+              GoRoute(
+                path: ':areaId',
+                builder: (context, state) =>
+                    ChecklistScreen(areaId: state.pathParameters['areaId']!),
+              ),
+            ],
+          ),
+        ],
       ),
     ],
   );

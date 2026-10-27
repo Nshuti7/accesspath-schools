@@ -13,6 +13,20 @@ class AppStrings {
   static const noAccount = 'New here? Create an account';
   static const haveAccount = 'Already have an account? Log in';
 
+  static const startAssessment = 'Start assessment';
+  static const assessmentAreas = 'Assessment areas';
+  static const yes = 'Yes';
+  static const no = 'No';
+  static const unsure = 'Unsure';
+  static const whyThisMatters = 'Why this matters';
+  static const guidePage = 'Guide p.';
+  static const moesRecommendation = 'MOES recommendation';
+  static const photoCheck = 'Photo check';
+  static const tryAgain = 'Try again';
+  static const areaNotFound = 'This area could not be found';
+  static String answeredOf(int answered, int total) =>
+      '$answered of $total answered';
+
   static const requiredField = 'Please fill this in';
   static const errorInvalidEmail = 'Please enter a valid email address';
   static const errorWrongLogin = 'Email or password is not correct';
@@ -22,4 +36,7 @@ class AppStrings {
   static const errorOffline = 'No internet connection. Please try again';
   static const errorTooManyTries = 'Too many tries. Please wait and try again';
   static const errorGeneric = 'Something went wrong. Please try again';
+  static const errorLoadAssessment =
+      'Could not load the checklist. Check your connection and try again';
+  static const errorSaveAnswer = 'Answer not saved. Please try again';
 }
