@@ -1,0 +1,66 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function userPath(uid) {
+      return /databases/$(database)/documents/users/$(uid);
+    }
+
+    function schoolPath(schoolId) {
+      return /databases/$(database)/documents/schools/$(schoolId);
+    }
+
+    // Membership is read from the caller's own user doc, never from the
+    // request, so nobody can claim a school just by saying so.
+    function isMemberOf(schoolId) {
+      return isSignedIn()
+        && exists(userPath(request.auth.uid))
+        && get(userPath(request.auth.uid)).data.schoolId == schoolId;
+    }
+
+    match /users/{uid} {
+      allow read, delete: if isSignedIn() && request.auth.uid == uid;
+
+      // Sign-up writes the school and this doc in one batch, so getAfter()
+      // sees the school as it will exist once the batch commits. Only the
+      // person who created the school may point their user doc at it.
+      allow create: if isSignedIn()
+        && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['name', 'email', 'schoolId', 'role'])
+        && request.resource.data.role == 'admin'
+        && getAfter(schoolPath(request.resource.data.schoolId)).data.createdBy == uid;
+
+      // Without this a user could edit schoolId to join another school, or
+      // promote themselves by changing role.
+      allow update: if isSignedIn()
+        && request.auth.uid == uid
+        && request.resource.data.schoolId == resource.data.schoolId
+        && request.resource.data.role == resource.data.role;
+    }
+
+    match /schools/{schoolId} {
+      allow create: if isSignedIn()
+        && request.resource.data.createdBy == request.auth.uid
+        && request.resource.data.keys().hasOnly(['name', 'createdBy', 'district', 'type', 'score']);
+
+      allow read: if isMemberOf(schoolId);
+
+      allow update: if isMemberOf(schoolId)
+        && request.resource.data.createdBy == resource.data.createdBy;
+
+      match /{subcollection}/{docId} {
+        allow read, write: if subcollection in ['answers', 'gaps', 'actions']
+          && isMemberOf(schoolId);
+      }
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
