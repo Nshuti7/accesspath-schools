@@ -1,0 +1,205 @@
+[
+  {
+    "id": "entrances_door_width",
+    "area": "entrances_exits",
+    "question": "Are classroom doors at least 0.9 m wide when open (primary) or 1.2 m wide (secondary)?",
+    "whyItMatters": "A narrower door stops a wheelchair user from getting into the room.",
+    "guideRef": "8",
+    "defaultPriority": "high"
+  },
+  {
+    "id": "entrances_lever_handles",
+    "area": "entrances_exits",
+    "question": "Do doors have lever handles that open with one hand, instead of round knobs?",
+    "whyItMatters": "Round knobs are hard to turn for people with weak grip or limited hand use.",
+    "guideRef": "8",
+    "defaultPriority": "medium"
+  },
+  {
+    "id": "entrances_doors_clear_of_walkways",
+    "area": "entrances_exits",
+    "question": "Do doors and windows open without swinging into walkways, corridors, ramps or stairs?",
+    "whyItMatters": "A door or window swinging into a path can hit or block people, especially those who cannot see it.",
+    "guideRef": "2",
+    "defaultPriority": "medium"
+  },
+  {
+    "id": "entrances_glass_door_marking",
+    "area": "entrances_exits",
+    "question": "If there are glass doors, do they have a coloured strip across them between 1.25 m and 1.60 m from the floor?",
+    "whyItMatters": "Learners with low vision can walk into clear glass they cannot see.",
+    "guideRef": "8",
+    "defaultPriority": "medium"
+  },
+  {
+    "id": "ramps_accessible_route",
+    "area": "ramps_pathways",
+    "question": "Is there at least one accessible path that connects all the main facilities in the compound?",
+    "whyItMatters": "Without a connected path, some learners cannot reach classrooms, toilets or the playground on their own.",
+    "guideRef": "2",
+    "defaultPriority": "high"
+  },
+  {
+    "id": "ramps_path_width",
+    "area": "ramps_pathways",
+    "question": "Is the accessible path at least 1.2 m wide?",
+    "whyItMatters": "A wheelchair user needs this width to move along the path safely.",
+    "guideRef": "2",
+    "defaultPriority": "high"
+  },
+  {
+    "id": "ramps_path_surface",
+    "area": "ramps_pathways",
+    "question": "Is the path surface firm, flat, stable and not slippery?",
+    "whyItMatters": "Loose, uneven or slippery ground causes falls and traps wheelchair wheels and crutches.",
+    "guideRef": "2",
+    "defaultPriority": "medium"
+  },
+  {
+    "id": "ramps_ramp_at_level_change",
+    "area": "ramps_pathways",
+    "question": "Wherever the ground or floor level changes by more than 25 mm, is there a ramp?",
+    "whyItMatters": "Even one step can stop a wheelchair user from entering a building.",
+    "guideRef": "12",
+    "defaultPriority": "high"
+  },
+  {
+    "id": "ramps_gradient",
+    "area": "ramps_pathways",
+    "question": "Are ramps gentle enough: the ramp is at least 12 times longer than it is high (1:12 or gentler)?",
+    "whyItMatters": "A ramp that is too steep is unsafe and cannot be climbed without help.",
+    "guideRef": "12",
+    "defaultPriority": "high"
+  },
+  {
+    "id": "ramps_handrails",
+    "area": "ramps_pathways",
+    "question": "Do ramps have a handrail on both sides?",
+    "whyItMatters": "Handrails give support and balance to people using crutches or walking unsteadily.",
+    "guideRef": "12",
+    "defaultPriority": "medium"
+  },
+  {
+    "id": "classrooms_turning_space",
+    "area": "classrooms_labs",
+    "question": "Is there a clear space of 1.5 m by 1.5 m inside the classroom door for a wheelchair to turn?",
+    "whyItMatters": "Without turning space, a wheelchair user cannot get in, reach a desk or leave the room.",
+    "guideRef": "8",
+    "defaultPriority": "high"
+  },
+  {
+    "id": "classrooms_veranda_width",
+    "area": "classrooms_labs",
+    "question": "Is the veranda in front of the classrooms at least 1.5 m wide?",
+    "whyItMatters": "A narrow veranda blocks wheelchair users from reaching classroom doors.",
+    "guideRef": "6",
+    "defaultPriority": "medium"
+  },
+  {
+    "id": "classrooms_detached_desks",
+    "area": "classrooms_labs",
+    "question": "Are there separate (detached) desks and seats for at least 10% of enrolled learners?",
+    "whyItMatters": "Fixed bench desks cannot be moved to make room for a wheelchair or other needs.",
+    "guideRef": "29",
+    "defaultPriority": "medium",
+    "isRecommendation": true
+  },
+  {
+    "id": "classrooms_library_formats",
+    "area": "classrooms_labs",
+    "question": "Does the library have books in Braille, large print or audio?",
+    "whyItMatters": "Learners who are blind or have low vision need these formats to read.",
+    "guideRef": "10",
+    "defaultPriority": "medium",
+    "isRecommendation": true
+  },
+  {
+    "id": "toilets_accessible_toilet",
+    "area": "toilets",
+    "question": "Does the school have at least one toilet that learners with disabilities can use?",
+    "whyItMatters": "Without an accessible toilet, some learners cannot stay in school for the full day.",
+    "guideRef": "16",
+    "defaultPriority": "high"
+  },
+  {
+    "id": "toilets_distance",
+    "area": "toilets",
+    "question": "Is the accessible toilet no more than 45 m from the classrooms?",
+    "whyItMatters": "A long trip to the toilet means missed lessons and is tiring for learners with mobility difficulties.",
+    "guideRef": "16",
+    "defaultPriority": "medium",
+    "isRecommendation": true
+  },
+  {
+    "id": "toilets_turning_space",
+    "area": "toilets",
+    "question": "Does the accessible toilet have a clear 1.5 m circle of space for a wheelchair to turn?",
+    "whyItMatters": "A wheelchair user needs this space to get in, close the door and reach the seat.",
+    "guideRef": "18",
+    "defaultPriority": "high"
+  },
+  {
+    "id": "toilets_grab_rails",
+    "area": "toilets",
+    "question": "Are there grab rails at the side and back of the accessible toilet?",
+    "whyItMatters": "Grab rails let learners move safely from a wheelchair to the toilet seat.",
+    "guideRef": "20",
+    "defaultPriority": "high"
+  },
+  {
+    "id": "toilets_handwashing",
+    "area": "toilets",
+    "question": "Does the handwashing point have a support handrail and a flat surface with room for a wheelchair to turn?",
+    "whyItMatters": "Every learner needs to wash their hands without help to stay healthy.",
+    "guideRef": "30",
+    "defaultPriority": "medium"
+  },
+  {
+    "id": "signage_compound_signs",
+    "area": "signage",
+    "question": "Is there a sign at the gate showing the names and directions of the school facilities?",
+    "whyItMatters": "Clear signs help visitors and new learners find their way without having to ask.",
+    "guideRef": "2",
+    "defaultPriority": "low"
+  },
+  {
+    "id": "signage_room_labels",
+    "area": "signage",
+    "question": "Does every room have a sign beside the door, 1.2 to 1.6 m from the floor, with raised letters or Braille?",
+    "whyItMatters": "Learners who are blind can find the right room by touch.",
+    "guideRef": "8",
+    "defaultPriority": "medium"
+  },
+  {
+    "id": "signage_contrast_large_print",
+    "area": "signage",
+    "question": "Do signs use large letters in a colour that stands out from the background?",
+    "whyItMatters": "Learners with low vision cannot read small or low-contrast signs.",
+    "guideRef": "8",
+    "defaultPriority": "low"
+  },
+  {
+    "id": "safety_extinguisher_easy_to_use",
+    "area": "safety",
+    "question": "Are fire extinguishers and other wall-mounted items placed so they are easy to see and use?",
+    "whyItMatters": "In a fire, everyone must be able to find and reach the extinguisher quickly.",
+    "guideRef": "4",
+    "defaultPriority": "medium"
+  },
+  {
+    "id": "safety_extinguisher_shielded",
+    "area": "safety",
+    "question": "Are fire extinguishers and other wall-mounted items set into the wall or shielded so they do not stick out into the path?",
+    "whyItMatters": "Objects sticking out from a wall can injure learners who use a white cane.",
+    "guideRef": "4",
+    "defaultPriority": "medium"
+  },
+  {
+    "id": "safety_toilet_door_from_outside",
+    "area": "safety",
+    "question": "Can the accessible toilet door be opened from outside in an emergency, and does it show when it is in use?",
+    "whyItMatters": "Staff must be able to reach a learner who falls or needs help inside the toilet.",
+    "guideRef": "16",
+    "defaultPriority": "high"
+  }
+]
