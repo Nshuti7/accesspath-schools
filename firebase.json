@@ -23,6 +23,7 @@
     "rules": "firestore.rules"
   },
   "hosting": {
+    "site": "gen-lang-client-0366595329",
     "public": "build/web",
     "ignore": [
       "firebase.json",
