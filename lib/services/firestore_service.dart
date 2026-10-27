@@ -15,6 +15,10 @@ class FirestoreService {
     return _db.collection('schools').doc(schoolId).collection('answers');
   }
 
+  CollectionReference<Map<String, dynamic>> _gapsOf(String schoolId) {
+    return _db.collection('schools').doc(schoolId).collection('gaps');
+  }
+
   /// Creates the school and its first (admin) user together, so we never end
   /// up with a user pointing at a school that does not exist.
   Future<void> createSchoolWithAdmin({
@@ -52,22 +56,37 @@ class FirestoreService {
         .toList();
   }
 
-  Future<void> addGap(String schoolId, Gap gap) {
-    return _db
-        .collection('schools')
-        .doc(schoolId)
-        .collection('gaps')
-        .add(gap.toMap());
+  Future<List<Gap>> loadGaps(String schoolId) async {
+    final snapshot = await _gapsOf(schoolId).get();
+    return snapshot.docs.map((doc) => Gap.fromMap(doc.id, doc.data())).toList();
   }
 
-  Future<void> saveAnswer(String schoolId, Answer answer) {
+  /// Adds a gap with a generated id and returns that id.
+  Future<String> addGap(String schoolId, Gap gap) async {
+    final ref = await _gapsOf(schoolId).add(gap.toMap());
+    return ref.id;
+  }
+
+  /// Saves the answer and, if given, its checklist gap in one batch, so the
+  /// gap report can never disagree with the answers.
+  Future<void> saveAnswer(String schoolId, Answer answer, {Gap? checklistGap}) {
+    final batch = _db.batch();
     // Merge, and leave out `note`, so changing the answer never wipes a note
     // someone added separately.
-    return _answersOf(schoolId).doc(answer.itemId).set({
+    batch.set(_answersOf(schoolId).doc(answer.itemId), {
       'area': answer.area,
       'answer': answer.value.name,
       'updatedBy': answer.updatedBy,
       'updatedAt': FieldValue.serverTimestamp(),
     }, SetOptions(merge: true));
+    if (checklistGap != null) {
+      // Merge so fields added later (e.g. by the action tracker) survive.
+      batch.set(
+        _gapsOf(schoolId).doc(checklistGap.id),
+        checklistGap.toMap(),
+        SetOptions(merge: true),
+      );
+    }
+    return batch.commit();
   }
 }

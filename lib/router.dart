@@ -6,6 +6,7 @@ import 'screens/auth/login_screen.dart';
 import 'screens/auth/sign_up_screen.dart';
 import 'screens/checklist/checklist_screen.dart';
 import 'screens/dashboard/dashboard_screen.dart';
+import 'screens/gaps/gap_report_screen.dart';
 import 'screens/photo_check/photo_check_screen.dart';
 
 class AppRoutes {
@@ -13,6 +14,7 @@ class AppRoutes {
   static const signUp = '/sign-up';
   static const dashboard = '/';
   static const areas = '/areas';
+  static const gaps = '/gaps';
   static String checklist(String areaId) => '/areas/$areaId';
 
   /// With [itemId], the photo is checked against that one item only.
@@ -54,6 +56,10 @@ GoRouter buildRouter(AuthProvider auth) {
         builder: (context, state) => const DashboardScreen(),
         // Nested so the app bar back arrow returns Checklist -> Areas -> Dashboard.
         routes: [
+          GoRoute(
+            path: 'gaps',
+            builder: (context, state) => const GapReportScreen(),
+          ),
           GoRoute(
             path: 'areas',
             builder: (context, state) => const AreasScreen(),

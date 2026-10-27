@@ -8,9 +8,9 @@ import '../services/checklist_service.dart';
 import '../services/firestore_service.dart';
 import '../strings.dart';
 
-/// Holds the checklist and this school's answers. Shared by the Areas and
-/// Checklist screens so progress on the Areas screen updates as soon as an
-/// answer is tapped.
+/// Holds the checklist and this school's answers and gaps. Shared by the
+/// Areas, Checklist, Photo check and Gap report screens so each one shows a
+/// change as soon as it is made on another.
 class AssessmentProvider extends ChangeNotifier {
   AssessmentProvider({
     ChecklistService? checklistService,
@@ -25,12 +25,14 @@ class AssessmentProvider extends ChangeNotifier {
   String? _schoolId;
   List<ChecklistItem> _items = const [];
   final Map<String, Answer> _answers = {};
+  final Map<String, Gap> _gaps = {};
   bool _isLoading = false;
   bool _isReady = false;
   String? _errorMessage;
 
   bool get isReady => _isReady;
   String? get errorMessage => _errorMessage;
+  List<Gap> get gaps => List.unmodifiable(_gaps.values);
 
   /// Called whenever the logged-in user changes. Clears the old school's data
   /// so the next person on a shared device never sees it.
@@ -39,6 +41,7 @@ class AssessmentProvider extends ChangeNotifier {
     _uid = uid;
     _schoolId = null;
     _answers.clear();
+    _gaps.clear();
     _isReady = false;
     _errorMessage = null;
   }
@@ -54,13 +57,19 @@ class AssessmentProvider extends ChangeNotifier {
       _items = await _checklistService.loadChecklist();
       final user = await _firestoreService.getUser(uid);
       if (user == null) throw StateError('No profile for $uid');
-      final answers = await _firestoreService.loadAnswers(user.schoolId);
+      final (answers, gaps) = await (
+        _firestoreService.loadAnswers(user.schoolId),
+        _firestoreService.loadGaps(user.schoolId),
+      ).wait;
       // The user logged out while we were loading; drop the results.
       if (uid != _uid) return;
       _schoolId = user.schoolId;
       _answers
         ..clear()
         ..addEntries(answers.map((answer) => MapEntry(answer.itemId, answer)));
+      _gaps
+        ..clear()
+        ..addEntries(gaps.map((gap) => MapEntry(gap.id, gap)));
       _isReady = true;
     } catch (_) {
       _errorMessage = AppStrings.errorLoadAssessment;
@@ -98,19 +107,21 @@ class AssessmentProvider extends ChangeNotifier {
       area: item.area,
       title: item.question,
       priority: item.defaultPriority,
-      source: 'ai_photo',
+      source: Gap.sourceAiPhoto,
       aiDescription: finding.finding,
     );
     try {
-      await _firestoreService.addGap(schoolId, gap);
+      final id = await _firestoreService.addGap(schoolId, gap);
+      _gaps[id] = gap.copyWith(id: id);
+      notifyListeners();
       return true;
     } catch (_) {
       return false;
     }
   }
 
-  /// Shows the new answer straight away, then saves it. Returns false if the
-  /// save failed, after putting the previous answer back.
+  /// Shows the new answer (and its checklist gap) straight away, then saves
+  /// both. Returns false if the save failed, after putting the old ones back.
   Future<bool> setAnswer(ChecklistItem item, AnswerValue value) async {
     final schoolId = _schoolId;
     final uid = _uid;
@@ -124,23 +135,36 @@ class AssessmentProvider extends ChangeNotifier {
       updatedBy: uid,
       note: previous?.note ?? '',
     );
+    // A checklist gap's doc id is its item id; photo gaps never use that id.
+    final previousGap = _gaps[item.id];
+    final gap = Gap.afterChecklistAnswer(
+      item: item,
+      value: value,
+      existing: previousGap,
+    );
     _answers[item.id] = answer;
+    if (gap != null) _gaps[item.id] = gap;
     notifyListeners();
 
     try {
-      await _firestoreService.saveAnswer(schoolId, answer);
+      await _firestoreService.saveAnswer(schoolId, answer, checklistGap: gap);
       return true;
     } catch (_) {
-      // Only roll back if no newer tap has replaced this answer meanwhile.
+      // Only roll back if no newer tap has replaced these meanwhile.
       if (identical(_answers[item.id], answer)) {
-        if (previous == null) {
-          _answers.remove(item.id);
-        } else {
-          _answers[item.id] = previous;
-        }
+        _restore(_answers, item.id, previous);
+        if (gap != null) _restore(_gaps, item.id, previousGap);
         notifyListeners();
       }
       return false;
+    }
+  }
+
+  static void _restore<T>(Map<String, T> map, String key, T? previous) {
+    if (previous == null) {
+      map.remove(key);
+    } else {
+      map[key] = previous;
     }
   }
 }

@@ -40,6 +40,21 @@ class AppStrings {
       'No obvious barriers spotted. Still check each question yourself.';
   static const allFindingsReviewed = 'All findings reviewed.';
   static String confidence(String level) => 'Confidence: $level';
+  static const gapReport = 'Gap report';
+  static const noGapsYet =
+      'No gaps yet. Answer checklist questions or run a photo check to find them.';
+  static const statusOpen = 'Open';
+  static const statusNeedsVerification = 'Needs verification';
+  static const statusVerified = 'Verified';
+  static const statusResolved = 'Resolved';
+  static const sourceChecklist = 'Checklist';
+  static const sourceAiPhoto = 'AI photo';
+  static const photoCheckSaw = 'Photo check saw';
+  static const assign = 'Assign';
+  static const highPriority = 'High priority';
+  static const mediumPriority = 'Medium priority';
+  static const lowPriority = 'Low priority';
+  static String resolvedGaps(int count) => 'Resolved gaps ($count)';
   static const tryAgain = 'Try again';
   static const areaNotFound = 'This area could not be found';
   static String answeredOf(int answered, int total) =>

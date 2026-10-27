@@ -36,6 +36,15 @@ class DashboardScreen extends StatelessWidget {
                 icon: const Icon(Icons.checklist),
                 label: const Text(AppStrings.startAssessment),
               ),
+              const SizedBox(height: 16),
+              OutlinedButton.icon(
+                onPressed: () => context.go(AppRoutes.gaps),
+                style: OutlinedButton.styleFrom(
+                  minimumSize: const Size(64, 56),
+                ),
+                icon: const Icon(Icons.report_outlined),
+                label: const Text(AppStrings.gapReport),
+              ),
             ],
           ),
         ),
