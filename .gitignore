@@ -48,3 +48,7 @@ app.*.map.json
 .widget_preview/
 CLAUDE.md
 docs/
+
+# Firebase deploy cache and Android build output
+.firebase/
+android/build/
