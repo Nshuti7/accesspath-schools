@@ -1,3 +1,4 @@
+import 'package:accesspath_schools/services/ai_call.dart';
 import 'package:accesspath_schools/services/gemini_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -5,10 +6,10 @@ void main() {
   const validIds = {'ramps_handrails', 'toilets_grab_rails'};
 
   Matcher throwsUnreadable() => throwsA(
-    isA<PhotoCheckException>().having(
+    isA<AiException>().having(
       (error) => error.reason,
       'reason',
-      PhotoCheckError.unreadableResponse,
+      AiError.unreadableResponse,
     ),
   );
 

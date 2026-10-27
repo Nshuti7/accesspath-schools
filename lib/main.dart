@@ -7,6 +7,7 @@ import 'firebase_options.dart';
 import 'providers/action_provider.dart';
 import 'providers/assessment_provider.dart';
 import 'providers/auth_provider.dart';
+import 'providers/guide_chat_provider.dart';
 import 'providers/school_provider.dart';
 import 'router.dart';
 import 'strings.dart';
@@ -56,6 +57,10 @@ class _AccessPathAppState extends State<AccessPathApp> {
         ChangeNotifierProxyProvider<SchoolProvider, ActionProvider>(
           create: (_) => ActionProvider(),
           update: (_, school, actions) => actions!..setSchool(school.schoolId),
+        ),
+        ChangeNotifierProxyProvider<AuthProvider, GuideChatProvider>(
+          create: (_) => GuideChatProvider(),
+          update: (_, auth, chat) => chat!..setUser(auth.user?.uid),
         ),
       ],
       child: MaterialApp.router(

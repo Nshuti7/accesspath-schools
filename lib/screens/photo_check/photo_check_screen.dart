@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../../models/checklist_item.dart';
 import '../../models/photo_finding.dart';
 import '../../providers/assessment_provider.dart';
+import '../../services/ai_call.dart';
 import '../../services/gemini_service.dart';
 import '../../strings.dart';
 import '../../widgets/form_error_text.dart';
@@ -33,7 +34,7 @@ class _PhotoCheckScreenState extends State<PhotoCheckScreen> {
   // The photo lives only in memory on this screen and is gone when it closes.
   Uint8List? _imageBytes;
   bool _isChecking = false;
-  PhotoCheckError? _error;
+  AiError? _error;
   List<PhotoFinding>? _findings;
   int _reviewedCount = 0;
 
@@ -81,7 +82,7 @@ class _PhotoCheckScreenState extends State<PhotoCheckScreen> {
         items: items,
       );
       if (mounted) setState(() => _findings = findings);
-    } on PhotoCheckException catch (error) {
+    } on AiException catch (error) {
       if (mounted) setState(() => _error = error.reason);
     } finally {
       if (mounted) setState(() => _isChecking = false);
@@ -176,12 +177,12 @@ class _PhotoCheckScreenState extends State<PhotoCheckScreen> {
     );
   }
 
-  static String _messageFor(PhotoCheckError error) {
+  static String _messageFor(AiError error) {
     return switch (error) {
-      PhotoCheckError.offline => AppStrings.errorOffline,
-      PhotoCheckError.quotaReached => AppStrings.errorPhotoQuota,
-      PhotoCheckError.unreadableResponse => AppStrings.errorPhotoUnreadable,
-      PhotoCheckError.unavailable => AppStrings.errorPhotoUnavailable,
+      AiError.offline => AppStrings.errorOffline,
+      AiError.quotaReached => AppStrings.errorPhotoQuota,
+      AiError.unreadableResponse => AppStrings.errorPhotoUnreadable,
+      AiError.unavailable => AppStrings.errorPhotoUnavailable,
     };
   }
 }

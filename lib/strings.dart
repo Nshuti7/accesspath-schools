@@ -30,6 +30,7 @@ class AppStrings {
   static const navAssess = 'Assess';
   static const navGaps = 'Gaps';
   static const navActions = 'Actions';
+  static const navGuide = 'Guide';
   static String greeting(DateTime now, String name) {
     final part = now.hour < 12
         ? 'Good morning'
@@ -65,6 +66,23 @@ class AppStrings {
   static const whyThisMatters = 'Why this matters';
   static const guidePage = 'Guide p.';
   static const moesRecommendation = 'MOES recommendation';
+  static const guideAssistant = 'Guide assistant';
+  static const guideIntro =
+      'Ask how to make your school accessible. '
+      'Answers come from the Ministry guide.';
+  static const guideSourceNote =
+      'From the MOES School Accessibility Companion Guide (2024)';
+  static const guideStarterTitle = 'Try asking';
+  static const guideStarterQuestions = [
+    'How steep can a ramp be?',
+    'What does an accessible toilet need?',
+    'How wide should classroom doors be?',
+    'How do we start an accessibility assessment?',
+  ];
+  static const askAQuestion = 'Ask a question';
+  static const send = 'Send';
+  static const lookingInGuide = 'Looking in the guide...';
+
   static const photoCheck = 'Photo check';
   static const checkPhotoOfArea = 'Check a photo of this area';
   static const takePhoto = 'Take photo';
@@ -175,6 +193,13 @@ class AppStrings {
       'Please try again later, or answer the questions yourself.';
   static const errorPhotoUnreadable =
       'We could not read the result for this photo. Please try again.';
+  static const errorAiQuota =
+      'The free AI limit has been reached for now. Please try again later.';
+  static const errorAiUnreadable =
+      'We could not read the answer. Please try again.';
+  static const errorGuideUnavailable =
+      'The guide assistant is not available right now. '
+      'Please try again later.';
   static const errorPhotoUnavailable =
       'Photo check is not available right now. '
       'Please answer the questions yourself.';

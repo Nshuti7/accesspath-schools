@@ -37,6 +37,12 @@ class AppShell extends StatelessWidget {
       icon: Icons.task_alt_outlined,
       selectedIcon: Icons.task_alt,
     ),
+    (
+      route: AppRoutes.guide,
+      label: AppStrings.navGuide,
+      icon: Icons.menu_book_outlined,
+      selectedIcon: Icons.menu_book,
+    ),
   ];
 
   final String location;

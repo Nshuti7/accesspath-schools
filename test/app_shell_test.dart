@@ -31,4 +31,11 @@ void main() {
     final bar = tester.widget<NavigationBar>(find.byType(NavigationBar));
     expect(bar.selectedIndex, 1);
   });
+
+  testWidgets('the guide tab is in the navigation', (tester) async {
+    await pumpShell(tester, 400, '/guide');
+    final bar = tester.widget<NavigationBar>(find.byType(NavigationBar));
+    expect(bar.destinations, hasLength(5));
+    expect(bar.selectedIndex, 4);
+  });
 }

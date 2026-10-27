@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:convert';
 
 import 'package:firebase_ai/firebase_ai.dart';
@@ -6,24 +5,9 @@ import 'package:flutter/foundation.dart';
 
 import '../models/checklist_item.dart';
 import '../models/photo_finding.dart';
-
-enum PhotoCheckError { offline, quotaReached, unreadableResponse, unavailable }
-
-class PhotoCheckException implements Exception {
-  const PhotoCheckException(this.reason);
-
-  final PhotoCheckError reason;
-
-  @override
-  String toString() => 'PhotoCheckException($reason)';
-}
+import 'ai_call.dart';
 
 class GeminiService {
-  // Stable Flash model on the Gemini Developer API, with no shutdown before
-  // May 2027. The 3.6-3.8 Flash models are marked short-term, so avoid them.
-  static const modelName = 'gemini-3.5-flash';
-
-  static const _timeout = Duration(seconds: 60);
   static const _confidenceLevels = ['low', 'medium', 'high'];
 
   static const _systemInstruction = '''
@@ -56,7 +40,7 @@ Rules:
     required List<ChecklistItem> items,
   }) async {
     final model = FirebaseAI.googleAI().generativeModel(
-      model: modelName,
+      model: geminiModelName,
       systemInstruction: Content('system', [TextPart(_systemInstruction)]),
       generationConfig: GenerationConfig(
         responseMimeType: 'application/json',
@@ -72,39 +56,7 @@ Rules:
       InlineDataPart(mimeType, imageBytes),
     ]);
 
-    final GenerateContentResponse response;
-    try {
-      response = await model.generateContent([prompt]).timeout(_timeout);
-    } on QuotaExceeded {
-      throw const PhotoCheckException(PhotoCheckError.quotaReached);
-    } on ServerException catch (error) {
-      // Rate limits sometimes arrive as a plain server error instead of
-      // QuotaExceeded.
-      final isRateLimit =
-          error.message.contains('RESOURCE_EXHAUSTED') ||
-          error.message.contains('429');
-      throw PhotoCheckException(
-        isRateLimit
-            ? PhotoCheckError.quotaReached
-            : PhotoCheckError.unavailable,
-      );
-    } on FirebaseAIException {
-      throw const PhotoCheckException(PhotoCheckError.unavailable);
-    } on FirebaseAISdkException {
-      throw const PhotoCheckException(PhotoCheckError.unreadableResponse);
-    } catch (_) {
-      // Network failures come through as http/socket exceptions, which differ
-      // between Android and web, plus our own timeout.
-      throw const PhotoCheckException(PhotoCheckError.offline);
-    }
-
-    final String? text;
-    try {
-      text = response.text;
-    } catch (_) {
-      // Thrown when the response was blocked, e.g. by a safety filter.
-      throw const PhotoCheckException(PhotoCheckError.unreadableResponse);
-    }
+    final text = await runAiCall(() => model.generateContent([prompt]));
     return parseFindings(text, items.map((item) => item.id).toSet());
   }
 
@@ -136,22 +88,22 @@ Rules:
     );
   }
 
-  /// Reads Gemini's JSON reply. Throws [PhotoCheckException] if the reply is
+  /// Reads Gemini's JSON reply. Throws [AiException] if the reply is
   /// not a list at all; skips any single entry that is malformed.
   @visibleForTesting
   static List<PhotoFinding> parseFindings(String? text, Set<String> validIds) {
     if (text == null || text.trim().isEmpty) {
-      throw const PhotoCheckException(PhotoCheckError.unreadableResponse);
+      throw const AiException(AiError.unreadableResponse);
     }
 
     final Object? decoded;
     try {
       decoded = jsonDecode(text);
     } on FormatException {
-      throw const PhotoCheckException(PhotoCheckError.unreadableResponse);
+      throw const AiException(AiError.unreadableResponse);
     }
     if (decoded is! List) {
-      throw const PhotoCheckException(PhotoCheckError.unreadableResponse);
+      throw const AiException(AiError.unreadableResponse);
     }
 
     final findings = <PhotoFinding>[];

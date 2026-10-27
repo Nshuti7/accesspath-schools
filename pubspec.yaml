@@ -67,6 +67,7 @@ flutter:
 
   assets:
     - assets/data/checklist.json
+    - assets/data/guide_knowledge.md
 
   # To add assets to your application, add an assets section, like this:
   # assets:
