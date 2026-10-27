@@ -83,6 +83,14 @@ class AppStrings {
   static const send = 'Send';
   static const lookingInGuide = 'Looking in the guide...';
 
+  static const generateSummary = 'Generate summary';
+  static const generateAgain = 'Generate again';
+  static const writingSummary = 'Writing summary...';
+  static const aiSummaryLabel = 'AI-generated summary – check before sharing';
+  static const topPriorities = 'Top priorities';
+  static const copy = 'Copy';
+  static const summaryCopied = 'Summary copied';
+
   static const photoCheck = 'Photo check';
   static const checkPhotoOfArea = 'Check a photo of this area';
   static const takePhoto = 'Take photo';
@@ -200,6 +208,8 @@ class AppStrings {
   static const errorGuideUnavailable =
       'The guide assistant is not available right now. '
       'Please try again later.';
+  static const errorSummaryUnavailable =
+      'The summary is not available right now. Please try again later.';
   static const errorPhotoUnavailable =
       'Photo check is not available right now. '
       'Please answer the questions yourself.';

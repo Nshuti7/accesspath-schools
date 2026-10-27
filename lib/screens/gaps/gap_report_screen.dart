@@ -3,14 +3,18 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/gap.dart';
+import '../../models/report_summary.dart';
 import '../../providers/action_provider.dart';
 import '../../providers/assessment_provider.dart';
+import '../../providers/school_provider.dart';
 import '../../router.dart';
+import '../../services/report_summary_service.dart';
 import '../../strings.dart';
 import '../../widgets/info_message.dart';
 import '../../widgets/data_gate.dart';
 import 'gap_card.dart';
 import 'gap_summary.dart';
+import 'report_summary_card.dart';
 
 class GapReportScreen extends StatefulWidget {
   const GapReportScreen({super.key});
@@ -25,6 +29,8 @@ class _GapReportScreenState extends State<GapReportScreen> {
     ('medium', AppStrings.mediumPriority),
     ('low', AppStrings.lowPriority),
   ];
+
+  final _summaryService = ReportSummaryService();
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +69,12 @@ class _GapReportScreenState extends State<GapReportScreen> {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
+            if (gaps.isNotEmpty) ...[
+              ReportSummaryCard(
+                onGenerate: () => _summarise(assessment, actions),
+              ),
+              const SizedBox(height: 24),
+            ],
             GapSummary(
               openCount: stats.openGaps,
               needsVerificationCount: stats.needsVerificationGaps,
@@ -87,6 +99,20 @@ class _GapReportScreenState extends State<GapReportScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Future<ReportSummary> _summarise(
+    AssessmentProvider assessment,
+    ActionProvider actions,
+  ) {
+    return _summaryService.summarise(
+      schoolName: context.read<SchoolProvider>().school?.name ?? '',
+      stats: assessment.stats,
+      gaps: assessment.gaps,
+      itemById: assessment.itemById,
+      actions: actions.actions,
+      now: DateTime.now(),
     );
   }
 
