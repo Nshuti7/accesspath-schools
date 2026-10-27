@@ -13,7 +13,38 @@ class AppStrings {
   static const noAccount = 'New here? Create an account';
   static const haveAccount = 'Already have an account? Log in';
 
-  static const startAssessment = 'Start assessment';
+  static const navDashboard = 'Dashboard';
+  static const navAssess = 'Assess';
+  static const navGaps = 'Gaps';
+  static const navActions = 'Actions';
+  static String greeting(DateTime now, String name) {
+    final part = now.hour < 12
+        ? 'Good morning'
+        : now.hour < 17
+        ? 'Good afternoon'
+        : 'Good evening';
+    return name.isEmpty ? part : '$part, $name';
+  }
+
+  static const accessibilityScore = 'Accessibility score';
+  static const scoreExplainer =
+      'Questions answered Yes, out of those answered.';
+  static const selfCheckNote = 'This is a self-check, not a certification.';
+  static String scoreSemantics(int percent) =>
+      'Accessibility score $percent percent';
+  static String questionsAnswered(int answered, int total) =>
+      '$answered of $total questions answered';
+  static const openGaps = 'Open gaps';
+  static const overdueActions = 'Overdue actions';
+  static const progressByArea = 'Progress by area';
+  static const nextSteps = 'Next steps';
+  static const nextStepsIntro = 'High-priority gaps that nobody is fixing yet.';
+  static const nextStepsNone =
+      'Every high-priority gap has someone working on it. Well done.';
+  static const startFirstAssessment = 'Start your first assessment';
+  static const startFirstAssessmentBody =
+      'Answer the checklist questions area by area. Your score, gaps and '
+      'next steps will appear here.';
   static const assessmentAreas = 'Assessment areas';
   static const yes = 'Yes';
   static const no = 'No';
@@ -113,6 +144,8 @@ class AppStrings {
   static const errorSaveAnswer = 'Answer not saved. Please try again';
   static const errorSaveGap =
       'Could not add this to the gap report. Please try again';
+  static const errorLoadSchool =
+      'Could not load your school. Check your connection and try again';
   static const errorLoadActions =
       'Could not load actions. Check your connection and try again';
   static const errorSaveAction = 'Action not saved. Please try again';

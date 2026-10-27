@@ -28,6 +28,9 @@ class ActionProvider extends ChangeNotifier {
   List<ActionItem> get actions =>
       _actions.values.toList()..sort((a, b) => a.dueDate.compareTo(b.dueDate));
 
+  int overdueCount(DateTime now) =>
+      _actions.values.where((action) => action.isOverdueOn(now)).length;
+
   ActionItem? actionForGap(String gapId) {
     for (final action in _actions.values) {
       if (action.gapId == gapId) return action;

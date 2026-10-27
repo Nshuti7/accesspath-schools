@@ -7,6 +7,7 @@ import 'firebase_options.dart';
 import 'providers/action_provider.dart';
 import 'providers/assessment_provider.dart';
 import 'providers/auth_provider.dart';
+import 'providers/school_provider.dart';
 import 'router.dart';
 import 'strings.dart';
 import 'theme.dart';
@@ -41,14 +42,20 @@ class _AccessPathAppState extends State<AccessPathApp> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: _authProvider),
-        ChangeNotifierProxyProvider<AuthProvider, AssessmentProvider>(
-          create: (_) => AssessmentProvider(),
-          update: (_, auth, assessment) => assessment!..setUser(auth.user?.uid),
+        // Login -> school lookup -> the school's data. Each step starts
+        // loading by itself when the one before it is ready.
+        ChangeNotifierProxyProvider<AuthProvider, SchoolProvider>(
+          create: (_) => SchoolProvider(),
+          update: (_, auth, school) => school!..setUser(auth.user?.uid),
         ),
-        ChangeNotifierProxyProvider<AssessmentProvider, ActionProvider>(
+        ChangeNotifierProxyProvider<SchoolProvider, AssessmentProvider>(
+          create: (_) => AssessmentProvider(),
+          update: (_, school, assessment) =>
+              assessment!..setSchool(school.schoolId, school.uid),
+        ),
+        ChangeNotifierProxyProvider<SchoolProvider, ActionProvider>(
           create: (_) => ActionProvider(),
-          update: (_, assessment, actions) =>
-              actions!..setSchool(assessment.schoolId),
+          update: (_, school, actions) => actions!..setSchool(school.schoolId),
         ),
       ],
       child: MaterialApp.router(

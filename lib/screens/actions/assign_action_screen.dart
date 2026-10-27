@@ -7,7 +7,7 @@ import '../../providers/action_provider.dart';
 import '../../providers/assessment_provider.dart';
 import '../auth/auth_validators.dart';
 import '../../strings.dart';
-import '../../widgets/load_error_view.dart';
+import '../../widgets/data_gate.dart';
 import '../../widgets/submit_button.dart';
 import 'due_date_field.dart';
 
@@ -28,14 +28,6 @@ class _AssignActionScreenState extends State<AssignActionScreen> {
   DateTime? _dueDate;
   bool _isSaving = false;
   bool _prefilled = false;
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => context.read<AssessmentProvider>().ensureLoaded(),
-    );
-  }
 
   @override
   void dispose() {
@@ -75,18 +67,13 @@ class _AssignActionScreenState extends State<AssignActionScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text(AppStrings.assignAction)),
-      body: _buildBody(context.watch<AssessmentProvider>()),
+      body: DataGate(
+        builder: (context) => _buildBody(context.watch<AssessmentProvider>()),
+      ),
     );
   }
 
   Widget _buildBody(AssessmentProvider assessment) {
-    final error = assessment.errorMessage;
-    if (error != null) {
-      return LoadErrorView(message: error, onRetry: assessment.ensureLoaded);
-    }
-    if (!assessment.isReady) {
-      return const Center(child: CircularProgressIndicator());
-    }
     final gap = assessment.gapById(widget.gapId);
     if (gap == null) {
       return const Center(child: Text(AppStrings.gapNotFound));

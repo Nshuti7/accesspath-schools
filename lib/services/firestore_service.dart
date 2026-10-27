@@ -54,6 +54,12 @@ class FirestoreService {
     return data == null ? null : AppUser.fromMap(uid, data);
   }
 
+  Future<School?> getSchool(String schoolId) async {
+    final snapshot = await _db.collection('schools').doc(schoolId).get();
+    final data = snapshot.data();
+    return data == null ? null : School.fromMap(schoolId, data);
+  }
+
   Future<List<Answer>> loadAnswers(String schoolId) async {
     final snapshot = await _answersOf(schoolId).get();
     return snapshot.docs

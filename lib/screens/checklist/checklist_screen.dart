@@ -8,7 +8,7 @@ import '../../models/checklist_item.dart';
 import '../../providers/assessment_provider.dart';
 import '../../router.dart';
 import '../../strings.dart';
-import '../../widgets/load_error_view.dart';
+import '../../widgets/data_gate.dart';
 import 'checklist_item_card.dart';
 
 class ChecklistScreen extends StatefulWidget {
@@ -21,15 +21,6 @@ class ChecklistScreen extends StatefulWidget {
 }
 
 class _ChecklistScreenState extends State<ChecklistScreen> {
-  @override
-  void initState() {
-    super.initState();
-    // Needed when this page is opened directly by URL on the web.
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => context.read<AssessmentProvider>().ensureLoaded(),
-    );
-  }
-
   Future<void> _answer(ChecklistItem item, AnswerValue value) async {
     final saved = await context.read<AssessmentProvider>().setAnswer(
       item,
@@ -50,19 +41,14 @@ class _ChecklistScreenState extends State<ChecklistScreen> {
       appBar: AppBar(title: Text(area?.name ?? AppStrings.assessmentAreas)),
       body: area == null
           ? const Center(child: Text(AppStrings.areaNotFound))
-          : _buildBody(context.watch<AssessmentProvider>(), area),
+          : DataGate(
+              builder: (context) =>
+                  _buildBody(context.watch<AssessmentProvider>(), area),
+            ),
     );
   }
 
   Widget _buildBody(AssessmentProvider assessment, AssessmentArea area) {
-    final error = assessment.errorMessage;
-    if (error != null) {
-      return LoadErrorView(message: error, onRetry: assessment.ensureLoaded);
-    }
-    if (!assessment.isReady) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
     final items = assessment.itemsForArea(area.id);
     return Center(
       child: ConstrainedBox(

@@ -8,7 +8,7 @@ import '../../providers/assessment_provider.dart';
 import '../../router.dart';
 import '../../strings.dart';
 import '../../widgets/info_message.dart';
-import '../../widgets/load_error_view.dart';
+import '../../widgets/data_gate.dart';
 import 'gap_card.dart';
 import 'gap_summary.dart';
 
@@ -27,46 +27,25 @@ class _GapReportScreenState extends State<GapReportScreen> {
   ];
 
   @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => context.read<AssessmentProvider>().ensureLoaded(),
-    );
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text(AppStrings.gapReport)),
-      body: _buildBody(
-        context.watch<AssessmentProvider>(),
-        context.watch<ActionProvider>(),
+      body: DataGate(
+        needsActions: true,
+        builder: (context) => _buildBody(
+          context.watch<AssessmentProvider>(),
+          context.watch<ActionProvider>(),
+        ),
       ),
     );
   }
 
   Widget _buildBody(AssessmentProvider assessment, ActionProvider actions) {
-    final error = assessment.errorMessage;
-    if (error != null) {
-      return LoadErrorView(message: error, onRetry: assessment.ensureLoaded);
-    }
-    final actionError = actions.errorMessage;
-    if (actionError != null) {
-      return LoadErrorView(message: actionError, onRetry: actions.load);
-    }
-    // Wait for actions too, so Assign is never offered for a gap that
-    // already has one.
-    if (!assessment.isReady || !actions.isReady) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
     final gaps = assessment.gaps;
     final active = gaps.where((gap) => !gap.isResolved).toList()
       ..sort(_needsActionFirst);
     final resolved = gaps.where((gap) => gap.isResolved).toList();
-    final needsVerificationCount = active
-        .where((gap) => gap.status == Gap.statusNeedsVerification)
-        .length;
+    final stats = assessment.stats;
 
     Widget cardFor(Gap gap) => Padding(
       padding: const EdgeInsets.only(bottom: 12),
@@ -85,10 +64,9 @@ class _GapReportScreenState extends State<GapReportScreen> {
           padding: const EdgeInsets.all(16),
           children: [
             GapSummary(
-              // Verified gaps are confirmed barriers, so they count as open.
-              openCount: active.length - needsVerificationCount,
-              needsVerificationCount: needsVerificationCount,
-              resolvedCount: resolved.length,
+              openCount: stats.openGaps,
+              needsVerificationCount: stats.needsVerificationGaps,
+              resolvedCount: stats.resolvedGaps,
             ),
             const SizedBox(height: 24),
             if (gaps.isEmpty) const InfoMessage(AppStrings.noGapsYet),

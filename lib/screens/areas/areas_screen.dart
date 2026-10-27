@@ -6,7 +6,7 @@ import '../../models/assessment_area.dart';
 import '../../providers/assessment_provider.dart';
 import '../../router.dart';
 import '../../strings.dart';
-import '../../widgets/load_error_view.dart';
+import '../../widgets/data_gate.dart';
 import 'area_card.dart';
 
 class AreasScreen extends StatefulWidget {
@@ -18,31 +18,16 @@ class AreasScreen extends StatefulWidget {
 
 class _AreasScreenState extends State<AreasScreen> {
   @override
-  void initState() {
-    super.initState();
-    // Loading notifies listeners, which is not allowed during the first build.
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => context.read<AssessmentProvider>().ensureLoaded(),
-    );
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text(AppStrings.assessmentAreas)),
-      body: _buildBody(context.watch<AssessmentProvider>()),
+      body: DataGate(
+        builder: (context) => _buildBody(context.watch<AssessmentProvider>()),
+      ),
     );
   }
 
   Widget _buildBody(AssessmentProvider assessment) {
-    final error = assessment.errorMessage;
-    if (error != null) {
-      return LoadErrorView(message: error, onRetry: assessment.ensureLoaded);
-    }
-    if (!assessment.isReady) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
     return Center(
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 720),

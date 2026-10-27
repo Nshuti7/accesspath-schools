@@ -10,7 +10,7 @@ import '../../services/gemini_service.dart';
 import '../../strings.dart';
 import '../../widgets/form_error_text.dart';
 import '../../widgets/info_message.dart';
-import '../../widgets/load_error_view.dart';
+import '../../widgets/data_gate.dart';
 import 'finding_card.dart';
 import 'photo_picker_panel.dart';
 
@@ -36,14 +36,6 @@ class _PhotoCheckScreenState extends State<PhotoCheckScreen> {
   PhotoCheckError? _error;
   List<PhotoFinding>? _findings;
   int _reviewedCount = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => context.read<AssessmentProvider>().ensureLoaded(),
-    );
-  }
 
   List<ChecklistItem> _itemsToCheck(AssessmentProvider assessment) {
     final itemId = widget.itemId;
@@ -130,22 +122,11 @@ class _PhotoCheckScreenState extends State<PhotoCheckScreen> {
 
     return Scaffold(
       appBar: AppBar(title: const Text(AppStrings.photoCheck)),
-      body: _buildBody(assessment),
+      body: DataGate(builder: (context) => _buildBody(assessment)),
     );
   }
 
   Widget _buildBody(AssessmentProvider assessment) {
-    final loadError = assessment.errorMessage;
-    if (loadError != null) {
-      return LoadErrorView(
-        message: loadError,
-        onRetry: assessment.ensureLoaded,
-      );
-    }
-    if (!assessment.isReady) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
     final error = _error;
     final findings = _findings;
     return Center(

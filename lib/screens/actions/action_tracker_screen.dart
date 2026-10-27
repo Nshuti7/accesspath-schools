@@ -7,7 +7,7 @@ import '../../providers/action_provider.dart';
 import '../../providers/assessment_provider.dart';
 import '../../strings.dart';
 import '../../widgets/info_message.dart';
-import '../../widgets/load_error_view.dart';
+import '../../widgets/data_gate.dart';
 import 'action_card.dart';
 import 'status_sheet.dart';
 
@@ -21,15 +21,6 @@ class ActionTrackerScreen extends StatefulWidget {
 class _ActionTrackerScreenState extends State<ActionTrackerScreen> {
   /// Null shows every status.
   String? _filter;
-
-  @override
-  void initState() {
-    super.initState();
-    // Actions load by themselves once the school is known from this.
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => context.read<AssessmentProvider>().ensureLoaded(),
-    );
-  }
 
   Future<void> _changeStatus(ActionItem action) async {
     final status = await showStatusSheet(context, action.status);
@@ -86,27 +77,17 @@ class _ActionTrackerScreenState extends State<ActionTrackerScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text(AppStrings.actionTracker)),
-      body: _buildBody(
-        context.watch<AssessmentProvider>(),
-        context.watch<ActionProvider>(),
+      body: DataGate(
+        needsActions: true,
+        builder: (context) => _buildBody(
+          context.watch<AssessmentProvider>(),
+          context.watch<ActionProvider>(),
+        ),
       ),
     );
   }
 
   Widget _buildBody(AssessmentProvider assessment, ActionProvider actions) {
-    final error = assessment.errorMessage ?? actions.errorMessage;
-    if (error != null) {
-      return LoadErrorView(
-        message: error,
-        onRetry: assessment.errorMessage != null
-            ? assessment.ensureLoaded
-            : actions.load,
-      );
-    }
-    if (!assessment.isReady || !actions.isReady) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
     final all = actions.actions;
     final shown = _filter == null
         ? all

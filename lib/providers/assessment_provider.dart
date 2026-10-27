@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 
 import '../models/answer.dart';
+import '../models/assessment_stats.dart';
 import '../models/checklist_item.dart';
 import '../models/gap.dart';
 import '../models/photo_finding.dart';
@@ -8,9 +11,9 @@ import '../services/checklist_service.dart';
 import '../services/firestore_service.dart';
 import '../strings.dart';
 
-/// Holds the checklist and this school's answers and gaps. Shared by the
-/// Areas, Checklist, Photo check and Gap report screens so each one shows a
-/// change as soon as it is made on another.
+/// Holds the checklist and this school's answers and gaps. Shared by every
+/// screen so each one shows a change as soon as it is made on another. Loads
+/// by itself once SchoolProvider knows the school.
 class AssessmentProvider extends ChangeNotifier {
   AssessmentProvider({
     ChecklistService? checklistService,
@@ -33,42 +36,47 @@ class AssessmentProvider extends ChangeNotifier {
   bool get isReady => _isReady;
   String? get errorMessage => _errorMessage;
   List<Gap> get gaps => List.unmodifiable(_gaps.values);
+  List<ChecklistItem> get items => _items;
 
-  /// Only set once loading has finished, so listeners can rely on it.
-  String? get schoolId => _isReady ? _schoolId : null;
+  AssessmentStats get stats => AssessmentStats.from(
+    totalItems: _items.length,
+    answers: _answers.values,
+    gaps: _gaps.values,
+  );
 
   Gap? gapById(String gapId) => _gaps[gapId];
 
-  /// Called whenever the logged-in user changes. Clears the old school's data
-  /// so the next person on a shared device never sees it.
-  void setUser(String? uid) {
-    if (uid == _uid) return;
+  /// Called when the school or user changes. Clears the old school's data so
+  /// the next person on a shared device never sees it.
+  void setSchool(String? schoolId, String? uid) {
+    if (schoolId == _schoolId && uid == _uid) return;
+    _schoolId = schoolId;
     _uid = uid;
-    _schoolId = null;
     _answers.clear();
     _gaps.clear();
     _isReady = false;
     _errorMessage = null;
+    // Runs during a provider update, so load just after it.
+    if (schoolId != null) scheduleMicrotask(load);
   }
 
-  Future<void> ensureLoaded() async {
-    final uid = _uid;
-    if (_isReady || _isLoading || uid == null) return;
+  Future<void> load() async {
+    final schoolId = _schoolId;
+    if (_isLoading || schoolId == null) return;
 
     _isLoading = true;
-    _errorMessage = null;
-    notifyListeners();
+    if (_errorMessage != null) {
+      _errorMessage = null;
+      notifyListeners();
+    }
     try {
       _items = await _checklistService.loadChecklist();
-      final user = await _firestoreService.getUser(uid);
-      if (user == null) throw StateError('No profile for $uid');
       final (answers, gaps) = await (
-        _firestoreService.loadAnswers(user.schoolId),
-        _firestoreService.loadGaps(user.schoolId),
+        _firestoreService.loadAnswers(schoolId),
+        _firestoreService.loadGaps(schoolId),
       ).wait;
-      // The user logged out while we were loading; drop the results.
-      if (uid != _uid) return;
-      _schoolId = user.schoolId;
+      // The school changed (e.g. logout) while loading; drop the results.
+      if (schoolId != _schoolId) return;
       _answers
         ..clear()
         ..addEntries(answers.map((answer) => MapEntry(answer.itemId, answer)));

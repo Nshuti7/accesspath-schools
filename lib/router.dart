@@ -10,6 +10,7 @@ import 'screens/checklist/checklist_screen.dart';
 import 'screens/dashboard/dashboard_screen.dart';
 import 'screens/gaps/gap_report_screen.dart';
 import 'screens/photo_check/photo_check_screen.dart';
+import 'widgets/app_shell.dart';
 
 class AppRoutes {
   static const login = '/login';
@@ -55,28 +56,18 @@ GoRouter buildRouter(AuthProvider auth) {
         path: AppRoutes.signUp,
         builder: (context, state) => const SignUpScreen(),
       ),
-      GoRoute(
-        path: AppRoutes.dashboard,
-        builder: (context, state) => const DashboardScreen(),
-        // Nested so the app bar back arrow returns Checklist -> Areas -> Dashboard.
+      // Every signed-in page sits inside the shell, so the navigation bar or
+      // rail stays visible. Sub-pages are nested so the back arrow works.
+      ShellRoute(
+        builder: (context, state, child) =>
+            AppShell(location: state.uri.path, child: child),
         routes: [
           GoRoute(
-            path: 'gaps',
-            builder: (context, state) => const GapReportScreen(),
-            routes: [
-              GoRoute(
-                path: ':gapId/assign',
-                builder: (context, state) =>
-                    AssignActionScreen(gapId: state.pathParameters['gapId']!),
-              ),
-            ],
+            path: AppRoutes.dashboard,
+            builder: (context, state) => const DashboardScreen(),
           ),
           GoRoute(
-            path: 'actions',
-            builder: (context, state) => const ActionTrackerScreen(),
-          ),
-          GoRoute(
-            path: 'areas',
+            path: AppRoutes.areas,
             builder: (context, state) => const AreasScreen(),
             routes: [
               GoRoute(
@@ -94,6 +85,21 @@ GoRouter buildRouter(AuthProvider auth) {
                 ],
               ),
             ],
+          ),
+          GoRoute(
+            path: AppRoutes.gaps,
+            builder: (context, state) => const GapReportScreen(),
+            routes: [
+              GoRoute(
+                path: ':gapId/assign',
+                builder: (context, state) =>
+                    AssignActionScreen(gapId: state.pathParameters['gapId']!),
+              ),
+            ],
+          ),
+          GoRoute(
+            path: AppRoutes.actions,
+            builder: (context, state) => const ActionTrackerScreen(),
           ),
         ],
       ),
