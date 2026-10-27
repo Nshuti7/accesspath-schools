@@ -11,11 +11,13 @@ class ChecklistItemCard extends StatelessWidget {
     required this.item,
     required this.answer,
     required this.onAnswer,
+    required this.onPhotoCheck,
   });
 
   final ChecklistItem item;
   final AnswerValue? answer;
   final ValueChanged<AnswerValue> onAnswer;
+  final VoidCallback onPhotoCheck;
 
   String get _sourceLabel {
     final parts = [
@@ -54,9 +56,8 @@ class ChecklistItemCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                // Disabled until the Photo check screen exists.
                 TextButton.icon(
-                  onPressed: null,
+                  onPressed: onPhotoCheck,
                   icon: const Icon(Icons.photo_camera_outlined),
                   label: const Text(AppStrings.photoCheck),
                 ),

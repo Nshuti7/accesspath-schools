@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 
 import '../models/answer.dart';
 import '../models/checklist_item.dart';
+import '../models/gap.dart';
+import '../models/photo_finding.dart';
 import '../services/checklist_service.dart';
 import '../services/firestore_service.dart';
 import '../strings.dart';
@@ -77,6 +79,35 @@ class AssessmentProvider extends ChangeNotifier {
   }
 
   AnswerValue? answerFor(String itemId) => _answers[itemId]?.value;
+
+  ChecklistItem? itemById(String itemId) {
+    for (final item in _items) {
+      if (item.id == itemId) return item;
+    }
+    return null;
+  }
+
+  /// Records a photo finding the user accepted as an open gap.
+  Future<bool> addGapFromPhoto(ChecklistItem item, PhotoFinding finding) async {
+    final schoolId = _schoolId;
+    if (schoolId == null) return false;
+
+    final gap = Gap(
+      id: '',
+      itemId: item.id,
+      area: item.area,
+      title: item.question,
+      priority: item.defaultPriority,
+      source: 'ai_photo',
+      aiDescription: finding.finding,
+    );
+    try {
+      await _firestoreService.addGap(schoolId, gap);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
 
   /// Shows the new answer straight away, then saves it. Returns false if the
   /// save failed, after putting the previous answer back.

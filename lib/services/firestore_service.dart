@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../models/answer.dart';
 import '../models/app_user.dart';
+import '../models/gap.dart';
 import '../models/school.dart';
 
 class FirestoreService {
@@ -49,6 +50,14 @@ class FirestoreService {
     return snapshot.docs
         .map((doc) => Answer.fromMap(doc.id, doc.data()))
         .toList();
+  }
+
+  Future<void> addGap(String schoolId, Gap gap) {
+    return _db
+        .collection('schools')
+        .doc(schoolId)
+        .collection('gaps')
+        .add(gap.toMap());
   }
 
   Future<void> saveAnswer(String schoolId, Answer answer) {
