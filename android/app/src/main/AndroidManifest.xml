@@ -1,6 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Flutter only adds this to the debug manifest; release builds need it
+         to reach Firebase and Gemini. -->
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
-        android:label="accesspath_schools"
+        android:label="AccessPath"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
