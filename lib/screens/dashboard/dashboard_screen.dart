@@ -31,6 +31,12 @@ class DashboardScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text(AppStrings.navDashboard),
         actions: [
+          IconButton(
+            // Push, so the back arrow returns to the dashboard.
+            onPressed: () => context.push(AppRoutes.schoolProfile),
+            icon: const Icon(Icons.school_outlined),
+            tooltip: AppStrings.schoolProfile,
+          ),
           TextButton(
             onPressed: () => context.read<AuthProvider>().signOut(),
             child: const Text(AppStrings.logOut),

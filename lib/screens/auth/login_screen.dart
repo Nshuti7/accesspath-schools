@@ -8,7 +8,7 @@ import '../../strings.dart';
 import '../../widgets/auth_form_layout.dart';
 import '../../widgets/form_error_text.dart';
 import '../../widgets/submit_button.dart';
-import 'auth_validators.dart';
+import '../../validators.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});

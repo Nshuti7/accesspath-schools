@@ -40,6 +40,8 @@ class AuthProvider extends ChangeNotifier {
   Future<bool> signUp({
     required String name,
     required String schoolName,
+    required String district,
+    required String schoolType,
     required String email,
     required String password,
   }) {
@@ -54,6 +56,8 @@ class AuthProvider extends ChangeNotifier {
           name: name,
           email: email,
           schoolName: schoolName,
+          district: district,
+          schoolType: schoolType,
         );
       } catch (_) {
         // Without the school record the account is unusable, so remove it

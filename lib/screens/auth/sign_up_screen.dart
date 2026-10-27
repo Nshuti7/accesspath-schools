@@ -6,9 +6,11 @@ import '../../providers/auth_provider.dart';
 import '../../router.dart';
 import '../../strings.dart';
 import '../../widgets/auth_form_layout.dart';
+import '../../widgets/district_field.dart';
 import '../../widgets/form_error_text.dart';
+import '../../widgets/school_type_field.dart';
 import '../../widgets/submit_button.dart';
-import 'auth_validators.dart';
+import '../../validators.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -23,6 +25,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final _schoolController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  String _district = '';
+  String _schoolType = '';
 
   @override
   void dispose() {
@@ -38,6 +42,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
     await context.read<AuthProvider>().signUp(
       name: _nameController.text.trim(),
       schoolName: _schoolController.text.trim(),
+      district: _district,
+      schoolType: _schoolType,
       email: _emailController.text.trim(),
       password: _passwordController.text,
     );
@@ -82,6 +88,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   textInputAction: TextInputAction.next,
                   validator: validateRequired,
                 ),
+                const SizedBox(height: 16),
+                DistrictField(onChanged: (value) => _district = value),
+                const SizedBox(height: 16),
+                SchoolTypeField(onChanged: (value) => _schoolType = value),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _emailController,

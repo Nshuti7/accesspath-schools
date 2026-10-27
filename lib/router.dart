@@ -10,6 +10,7 @@ import 'screens/checklist/checklist_screen.dart';
 import 'screens/dashboard/dashboard_screen.dart';
 import 'screens/gaps/gap_report_screen.dart';
 import 'screens/photo_check/photo_check_screen.dart';
+import 'screens/school/school_profile_screen.dart';
 import 'widgets/app_shell.dart';
 
 class AppRoutes {
@@ -19,6 +20,7 @@ class AppRoutes {
   static const areas = '/areas';
   static const gaps = '/gaps';
   static const actions = '/actions';
+  static const schoolProfile = '/school';
   static String assignAction(String gapId) => '/gaps/$gapId/assign';
   static String checklist(String areaId) => '/areas/$areaId';
 
@@ -100,6 +102,10 @@ GoRouter buildRouter(AuthProvider auth) {
           GoRoute(
             path: AppRoutes.actions,
             builder: (context, state) => const ActionTrackerScreen(),
+          ),
+          GoRoute(
+            path: AppRoutes.schoolProfile,
+            builder: (context, state) => const SchoolProfileScreen(),
           ),
         ],
       ),

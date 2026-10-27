@@ -1,4 +1,4 @@
-import '../../strings.dart';
+import 'strings.dart';
 
 String? validateRequired(String? value) {
   if (value == null || value.trim().isEmpty) return AppStrings.requiredField;

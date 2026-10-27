@@ -8,14 +8,18 @@ class School {
     this.score = 0,
   });
 
+  static const typePrimary = 'primary';
+  static const typeSecondary = 'secondary';
+  static const typeBoth = 'both';
+  static const types = [typePrimary, typeSecondary, typeBoth];
+
   final String id;
   final String name;
   final String createdBy;
 
-  // District and type start empty and are filled in on the School setup screen.
   final String district;
 
-  /// Either 'primary' or 'secondary'.
+  /// One of [types]. Empty for schools created before it was asked.
   final String type;
 
   /// Percentage of answered checklist items marked "yes" (0 to 100).
@@ -29,6 +33,17 @@ class School {
       district: map['district'] as String? ?? '',
       type: map['type'] as String? ?? '',
       score: (map['score'] as num?)?.toInt() ?? 0,
+    );
+  }
+
+  School copyWith({String? name, String? district, String? type}) {
+    return School(
+      id: id,
+      name: name ?? this.name,
+      createdBy: createdBy,
+      district: district ?? this.district,
+      type: type ?? this.type,
+      score: score,
     );
   }
 

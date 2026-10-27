@@ -45,6 +45,29 @@ class SchoolProvider extends ChangeNotifier {
     if (uid != null) scheduleMicrotask(load);
   }
 
+  /// Returns false, leaving the old details in place, if the save fails.
+  Future<bool> updateDetails({
+    required String name,
+    required String district,
+    required String type,
+  }) async {
+    final current = _school;
+    if (current == null) return false;
+    final updated = current.copyWith(
+      name: name,
+      district: district,
+      type: type,
+    );
+    try {
+      await _firestoreService.updateSchoolDetails(updated);
+    } catch (_) {
+      return false;
+    }
+    _school = updated;
+    notifyListeners();
+    return true;
+  }
+
   Future<void> load() async {
     final uid = _uid;
     if (uid == null || _isLoading) return;

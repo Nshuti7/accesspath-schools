@@ -6,6 +6,19 @@ class AppStrings {
   static const password = 'Password';
   static const yourName = 'Your name';
   static const schoolName = 'School name';
+  static const district = 'District';
+  static const otherDistrict = 'Other';
+  static const districtName = 'District name';
+  static const schoolType = 'School type';
+  static const schoolProfile = 'School profile';
+  static const saveChanges = 'Save changes';
+  static const schoolSaved = 'School details saved';
+  static String schoolTypeLabel(String type) => switch (type) {
+    'primary' => 'Primary',
+    'secondary' => 'Secondary',
+    'both' => 'Primary and secondary',
+    _ => '',
+  };
 
   static const logIn = 'Log in';
   static const signUp = 'Sign up';
@@ -145,6 +158,9 @@ class AppStrings {
   static const errorSaveAnswer = 'Answer not saved. Please try again';
   static const errorSaveGap =
       'Could not add this to the gap report. Please try again';
+  static const errorChooseDistrict = 'Please choose a district';
+  static const errorChooseSchoolType = 'Please choose a school type';
+  static const errorSaveSchool = 'School details not saved. Please try again';
   static const errorLoadSchool =
       'Could not load your school. Check your connection and try again';
   static const errorLoadActions =

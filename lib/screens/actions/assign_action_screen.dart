@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import '../../models/gap.dart';
 import '../../providers/action_provider.dart';
 import '../../providers/assessment_provider.dart';
-import '../auth/auth_validators.dart';
+import '../../validators.dart';
 import '../../strings.dart';
 import '../../widgets/data_gate.dart';
 import '../../widgets/submit_button.dart';

@@ -31,9 +31,17 @@ class FirestoreService {
     required String name,
     required String email,
     required String schoolName,
+    required String district,
+    required String schoolType,
   }) async {
     final schoolRef = _db.collection('schools').doc();
-    final school = School(id: schoolRef.id, name: schoolName, createdBy: uid);
+    final school = School(
+      id: schoolRef.id,
+      name: schoolName,
+      createdBy: uid,
+      district: district,
+      type: schoolType,
+    );
     final user = AppUser(
       uid: uid,
       name: name,
@@ -58,6 +66,14 @@ class FirestoreService {
     final snapshot = await _db.collection('schools').doc(schoolId).get();
     final data = snapshot.data();
     return data == null ? null : School.fromMap(schoolId, data);
+  }
+
+  Future<void> updateSchoolDetails(School school) {
+    return _db.collection('schools').doc(school.id).update({
+      'name': school.name,
+      'district': school.district,
+      'type': school.type,
+    });
   }
 
   Future<List<Answer>> loadAnswers(String schoolId) async {
