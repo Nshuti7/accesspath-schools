@@ -55,6 +55,7 @@ class GapCard extends StatelessWidget {
     final areaName = AssessmentArea.byId(gap.area)?.name ?? gap.area;
     final guideLabel = _guideLabel;
     final assigned = action;
+    final recommendation = item?.recommendation ?? '';
 
     return Card(
       child: Padding(
@@ -99,6 +100,11 @@ class GapCard extends StatelessWidget {
               const SizedBox(height: 12),
               Text(AppStrings.photoCheckSaw, style: mutedStyle),
               Text(gap.aiDescription, style: theme.textTheme.bodyLarge),
+            ],
+            if (recommendation.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              Text(AppStrings.whatToDo, style: mutedStyle),
+              Text(recommendation, style: theme.textTheme.bodyLarge),
             ],
             const SizedBox(height: 8),
             if (assigned != null)

@@ -6,6 +6,7 @@ class ChecklistItem {
     required this.area,
     required this.question,
     required this.whyItMatters,
+    this.recommendation = '',
     required this.guideRef,
     required this.defaultPriority,
     this.isRecommendation = false,
@@ -17,6 +18,10 @@ class ChecklistItem {
   final String area;
   final String question;
   final String whyItMatters;
+
+  /// What a school can do to fix this barrier. Ends with "(Guide p. X)" when
+  /// it comes from the guide, or "(general guidance)" when it does not.
+  final String recommendation;
 
   /// Printed page number in the Ministry guide, or 'TODO' if not yet confirmed.
   final String guideRef;
@@ -34,6 +39,7 @@ class ChecklistItem {
       area: map['area'] as String,
       question: map['question'] as String,
       whyItMatters: map['whyItMatters'] as String? ?? '',
+      recommendation: map['recommendation'] as String? ?? '',
       guideRef: map['guideRef'] as String? ?? 'TODO',
       defaultPriority: map['defaultPriority'] as String? ?? 'medium',
       isRecommendation: map['isRecommendation'] as bool? ?? false,
@@ -46,6 +52,7 @@ class ChecklistItem {
       'area': area,
       'question': question,
       'whyItMatters': whyItMatters,
+      'recommendation': recommendation,
       'guideRef': guideRef,
       'defaultPriority': defaultPriority,
       'isRecommendation': isRecommendation,

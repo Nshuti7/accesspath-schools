@@ -82,6 +82,7 @@ class AppStrings {
   static const sourceAiPhoto = 'AI photo';
   static const photoCheckSaw = 'Photo check saw';
   static const assign = 'Assign';
+  static const whatToDo = 'What to do';
   static const highPriority = 'High priority';
   static const mediumPriority = 'Medium priority';
   static const lowPriority = 'Low priority';

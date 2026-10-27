@@ -4,6 +4,7 @@
     "area": "entrances_exits",
     "question": "Are classroom doors at least 0.9 m wide when open (primary) or 1.2 m wide (secondary)?",
     "whyItMatters": "A narrower door stops a wheelchair user from getting into the room.",
+    "recommendation": "Widen doorways to a clear opening of at least 0.9 m (primary) or 1.2 m (secondary). A two-leaf door of 0.2 m + 1.0 m meets the secondary width (Guide p. 8).",
     "guideRef": "8",
     "defaultPriority": "high"
   },
@@ -12,6 +13,7 @@
     "area": "entrances_exits",
     "question": "Do doors have lever handles that open with one hand, instead of round knobs?",
     "whyItMatters": "Round knobs are hard to turn for people with weak grip or limited hand use.",
+    "recommendation": "Replace round door knobs with lever handles that work with one hand, fitted no higher than 1.0 m from the floor (Guide p. 8).",
     "guideRef": "8",
     "defaultPriority": "medium"
   },
@@ -20,6 +22,7 @@
     "area": "entrances_exits",
     "question": "Do doors and windows open without swinging into walkways, corridors, ramps or stairs?",
     "whyItMatters": "A door or window swinging into a path can hit or block people, especially those who cannot see it.",
+    "recommendation": "Rehang doors and windows so they do not swing into walkways, corridors, ramps or stairs, and fit doorstops so open doors do not create a hazard (Guide pp. 2, 4).",
     "guideRef": "2",
     "defaultPriority": "medium"
   },
@@ -28,6 +31,7 @@
     "area": "entrances_exits",
     "question": "If there are glass doors, do they have a coloured strip across them between 1.25 m and 1.60 m from the floor?",
     "whyItMatters": "Learners with low vision can walk into clear glass they cannot see.",
+    "recommendation": "Add a horizontal strip in a contrasting, non-glaring colour across each glass door, between 1.25 m and 1.60 m from the floor (Guide p. 8).",
     "guideRef": "8",
     "defaultPriority": "medium"
   },
@@ -36,6 +40,7 @@
     "area": "ramps_pathways",
     "question": "Is there at least one accessible path that connects all the main facilities in the compound?",
     "whyItMatters": "Without a connected path, some learners cannot reach classrooms, toilets or the playground on their own.",
+    "recommendation": "Create at least one continuous accessible route that connects all the main facilities in the school compound (Guide p. 2).",
     "guideRef": "2",
     "defaultPriority": "high"
   },
@@ -44,6 +49,7 @@
     "area": "ramps_pathways",
     "question": "Is the accessible path at least 1.2 m wide?",
     "whyItMatters": "A wheelchair user needs this width to move along the path safely.",
+    "recommendation": "Widen the accessible path so the clear walking surface is at least 1.2 m wide (Guide p. 2).",
     "guideRef": "2",
     "defaultPriority": "high"
   },
@@ -52,6 +58,7 @@
     "area": "ramps_pathways",
     "question": "Is the path surface firm, flat, stable and not slippery?",
     "whyItMatters": "Loose, uneven or slippery ground causes falls and traps wheelchair wheels and crutches.",
+    "recommendation": "Resurface the path so it is firm, stable, flat and slip-resistant. Set drain gratings flush with the path, with gaps no wider than 13 mm (Guide pp. 2, 4).",
     "guideRef": "2",
     "defaultPriority": "medium"
   },
@@ -60,6 +67,7 @@
     "area": "ramps_pathways",
     "question": "Wherever the ground or floor level changes by more than 25 mm, is there a ramp?",
     "whyItMatters": "Even one step can stop a wheelchair user from entering a building.",
+    "recommendation": "Build a ramp wherever the level changes by more than 25 mm, with a landing of 1.5 m x 1.1 m at the top and bottom (Guide p. 12).",
     "guideRef": "12",
     "defaultPriority": "high"
   },
@@ -68,6 +76,7 @@
     "area": "ramps_pathways",
     "question": "Are ramps gentle enough: the ramp is at least 12 times longer than it is high (1:12 or gentler)?",
     "whyItMatters": "A ramp that is too steep is unsafe and cannot be climbed without help.",
+    "recommendation": "Rebuild steep ramps to 1:12 or gentler, aiming for 1:20. A 1:12 ramp needs a landing at least every 2.26 m (Guide pp. 12, 31).",
     "guideRef": "12",
     "defaultPriority": "high"
   },
@@ -76,6 +85,7 @@
     "area": "ramps_pathways",
     "question": "Do ramps have a handrail on both sides?",
     "whyItMatters": "Handrails give support and balance to people using crutches or walking unsteadily.",
+    "recommendation": "Fit handrails on both sides of each ramp, at 0.6-0.7 m and 0.8-0.9 m high, extending 0.3 m beyond the top and bottom (Guide pp. 12, 14).",
     "guideRef": "12",
     "defaultPriority": "medium"
   },
@@ -84,6 +94,7 @@
     "area": "classrooms_labs",
     "question": "Is there a clear space of 1.5 m by 1.5 m inside the classroom door for a wheelchair to turn?",
     "whyItMatters": "Without turning space, a wheelchair user cannot get in, reach a desk or leave the room.",
+    "recommendation": "Rearrange desks so there is a clear 1.5 m x 1.5 m space inside the classroom door for a wheelchair user to turn (Guide p. 8).",
     "guideRef": "8",
     "defaultPriority": "high"
   },
@@ -92,6 +103,7 @@
     "area": "classrooms_labs",
     "question": "Is the veranda in front of the classrooms at least 1.5 m wide?",
     "whyItMatters": "A narrow veranda blocks wheelchair users from reaching classroom doors.",
+    "recommendation": "Widen the veranda in front of classrooms to a clear width of at least 1.5 m (Guide p. 6).",
     "guideRef": "6",
     "defaultPriority": "medium"
   },
@@ -100,6 +112,7 @@
     "area": "classrooms_labs",
     "question": "Are there separate (detached) desks and seats for at least 10% of enrolled learners?",
     "whyItMatters": "Fixed bench desks cannot be moved to make room for a wheelchair or other needs.",
+    "recommendation": "Provide detached desks and seats, and height-adjustable desks, each for at least 10% of enrolled learners (Guide p. 29).",
     "guideRef": "29",
     "defaultPriority": "medium",
     "isRecommendation": true
@@ -109,6 +122,7 @@
     "area": "classrooms_labs",
     "question": "Does the library have books in Braille, large print or audio?",
     "whyItMatters": "Learners who are blind or have low vision need these formats to read.",
+    "recommendation": "Add books in Braille, large print and audio formats to the library (Guide p. 10).",
     "guideRef": "10",
     "defaultPriority": "medium",
     "isRecommendation": true
@@ -118,6 +132,7 @@
     "area": "toilets",
     "question": "Does the school have at least one toilet that learners with disabilities can use?",
     "whyItMatters": "Without an accessible toilet, some learners cannot stay in school for the full day.",
+    "recommendation": "Build or adapt at least two accessible toilets (male and female) or one unisex toilet, with a compartment of at least 1.9 m x 2.3 m (Guide pp. 16, 18).",
     "guideRef": "16",
     "defaultPriority": "high"
   },
@@ -126,6 +141,7 @@
     "area": "toilets",
     "question": "Is the accessible toilet no more than 45 m from the classrooms?",
     "whyItMatters": "A long trip to the toilet means missed lessons and is tiring for learners with mobility difficulties.",
+    "recommendation": "Place the accessible toilet as close to classrooms as possible, ideally within 15 m and never more than 45 m away (Guide p. 16).",
     "guideRef": "16",
     "defaultPriority": "medium",
     "isRecommendation": true
@@ -135,6 +151,7 @@
     "area": "toilets",
     "question": "Does the accessible toilet have a clear 1.5 m circle of space for a wheelchair to turn?",
     "whyItMatters": "A wheelchair user needs this space to get in, close the door and reach the seat.",
+    "recommendation": "Clear or enlarge the accessible toilet so there is a 1.5 m turning circle free of any obstructions (Guide p. 18).",
     "guideRef": "18",
     "defaultPriority": "high"
   },
@@ -143,6 +160,7 @@
     "area": "toilets",
     "question": "Are there grab rails at the side and back of the accessible toilet?",
     "whyItMatters": "Grab rails let learners move safely from a wheelchair to the toilet seat.",
+    "recommendation": "Fit grab rails 30-40 mm in diameter at the side and back of the toilet, plus a hinged support arm on the transfer side (Guide p. 20).",
     "guideRef": "20",
     "defaultPriority": "high"
   },
@@ -151,6 +169,7 @@
     "area": "toilets",
     "question": "Does the handwashing point have a support handrail and a flat surface with room for a wheelchair to turn?",
     "whyItMatters": "Every learner needs to wash their hands without help to stay healthy.",
+    "recommendation": "Add a support handrail, a raised border and a flat surface with turning space at the handwashing point (Guide p. 30).",
     "guideRef": "30",
     "defaultPriority": "medium"
   },
@@ -159,6 +178,7 @@
     "area": "signage",
     "question": "Is there a sign at the gate showing the names and directions of the school facilities?",
     "whyItMatters": "Clear signs help visitors and new learners find their way without having to ask.",
+    "recommendation": "Put up a sign at the gate showing the names and directions of school facilities, with letters at least 50 mm high (Guide p. 2).",
     "guideRef": "2",
     "defaultPriority": "low"
   },
@@ -167,6 +187,7 @@
     "area": "signage",
     "question": "Does every room have a sign beside the door, 1.2 to 1.6 m from the floor, with raised letters or Braille?",
     "whyItMatters": "Learners who are blind can find the right room by touch.",
+    "recommendation": "Fix a sign beside each door, 1.2-1.6 m from the floor, showing the class or room name in engraved letters or Braille (Guide p. 8).",
     "guideRef": "8",
     "defaultPriority": "medium"
   },
@@ -175,6 +196,7 @@
     "area": "signage",
     "question": "Do signs use large letters in a colour that stands out from the background?",
     "whyItMatters": "Learners with low vision cannot read small or low-contrast signs.",
+    "recommendation": "Repaint or replace signs using large print in a colour that contrasts with the background, so they can be read from a distance (Guide p. 8).",
     "guideRef": "8",
     "defaultPriority": "low"
   },
@@ -183,6 +205,7 @@
     "area": "safety",
     "question": "Are fire extinguishers and other wall-mounted items placed so they are easy to see and use?",
     "whyItMatters": "In a fire, everyone must be able to find and reach the extinguisher quickly.",
+    "recommendation": "Mount fire extinguishers and other wall items where they are easy to see and use (Guide p. 4).",
     "guideRef": "4",
     "defaultPriority": "medium"
   },
@@ -191,6 +214,7 @@
     "area": "safety",
     "question": "Are fire extinguishers and other wall-mounted items set into the wall or shielded so they do not stick out into the path?",
     "whyItMatters": "Objects sticking out from a wall can injure learners who use a white cane.",
+    "recommendation": "Recess wall-mounted items into the wall or shield them, with a feature that warns white cane users, so nothing sticks out into the path (Guide p. 4).",
     "guideRef": "4",
     "defaultPriority": "medium"
   },
@@ -199,6 +223,7 @@
     "area": "safety",
     "question": "Can the accessible toilet door be opened from outside in an emergency, and does it show when it is in use?",
     "whyItMatters": "Staff must be able to reach a learner who falls or needs help inside the toilet.",
+    "recommendation": "Fit the accessible toilet door with an easy one-hand lock that can be opened from outside in an emergency and shows when the toilet is in use. The door should open outwards (Guide p. 16).",
     "guideRef": "16",
     "defaultPriority": "high"
   }

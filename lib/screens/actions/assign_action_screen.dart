@@ -79,6 +79,9 @@ class _AssignActionScreenState extends State<AssignActionScreen> {
       return const Center(child: Text(AppStrings.gapNotFound));
     }
 
+    final recommendation =
+        assessment.itemById(gap.itemId)?.recommendation ?? '';
+
     // Pre-fill once, after the gap has loaded, without overwriting edits.
     if (!_prefilled) {
       _titleController.text = gap.title;
@@ -95,6 +98,10 @@ class _AssignActionScreenState extends State<AssignActionScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                if (recommendation.isNotEmpty) ...[
+                  _RecommendationHint(recommendation),
+                  const SizedBox(height: 16),
+                ],
                 TextFormField(
                   controller: _titleController,
                   decoration: const InputDecoration(
@@ -137,6 +144,53 @@ class _AssignActionScreenState extends State<AssignActionScreen> {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// Shows the guide's fix above the form, to help write the action title.
+class _RecommendationHint extends StatelessWidget {
+  const _RecommendationHint(this.recommendation);
+
+  final String recommendation;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colors = theme.colorScheme;
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: colors.secondaryContainer,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(Icons.lightbulb_outline, color: colors.onSecondaryContainer),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  AppStrings.whatToDo,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: colors.onSecondaryContainer,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                Text(
+                  recommendation,
+                  style: theme.textTheme.bodyLarge?.copyWith(
+                    color: colors.onSecondaryContainer,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
