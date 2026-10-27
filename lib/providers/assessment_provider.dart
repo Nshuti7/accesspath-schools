@@ -34,6 +34,11 @@ class AssessmentProvider extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
   List<Gap> get gaps => List.unmodifiable(_gaps.values);
 
+  /// Only set once loading has finished, so listeners can rely on it.
+  String? get schoolId => _isReady ? _schoolId : null;
+
+  Gap? gapById(String gapId) => _gaps[gapId];
+
   /// Called whenever the logged-in user changes. Clears the old school's data
   /// so the next person on a shared device never sees it.
   void setUser(String? uid) {
@@ -116,6 +121,28 @@ class AssessmentProvider extends ChangeNotifier {
       notifyListeners();
       return true;
     } catch (_) {
+      return false;
+    }
+  }
+
+  /// Used by the Action tracker when an action is done and the user confirms
+  /// the gap is fixed. Reverts and returns false if the save fails.
+  Future<bool> setGapStatus(String gapId, String status) async {
+    final schoolId = _schoolId;
+    final previous = _gaps[gapId];
+    if (schoolId == null || previous == null) return false;
+
+    final updated = previous.copyWith(status: status);
+    _gaps[gapId] = updated;
+    notifyListeners();
+    try {
+      await _firestoreService.updateGapStatus(schoolId, gapId, status);
+      return true;
+    } catch (_) {
+      if (identical(_gaps[gapId], updated)) {
+        _gaps[gapId] = previous;
+        notifyListeners();
+      }
       return false;
     }
   }

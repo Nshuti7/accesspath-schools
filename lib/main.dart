@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import 'firebase_options.dart';
+import 'providers/action_provider.dart';
 import 'providers/assessment_provider.dart';
 import 'providers/auth_provider.dart';
 import 'router.dart';
@@ -43,6 +44,11 @@ class _AccessPathAppState extends State<AccessPathApp> {
         ChangeNotifierProxyProvider<AuthProvider, AssessmentProvider>(
           create: (_) => AssessmentProvider(),
           update: (_, auth, assessment) => assessment!..setUser(auth.user?.uid),
+        ),
+        ChangeNotifierProxyProvider<AssessmentProvider, ActionProvider>(
+          create: (_) => ActionProvider(),
+          update: (_, assessment, actions) =>
+              actions!..setSchool(assessment.schoolId),
         ),
       ],
       child: MaterialApp.router(

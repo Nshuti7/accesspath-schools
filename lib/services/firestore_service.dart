@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../models/action_item.dart';
 import '../models/answer.dart';
 import '../models/app_user.dart';
 import '../models/gap.dart';
@@ -17,6 +18,10 @@ class FirestoreService {
 
   CollectionReference<Map<String, dynamic>> _gapsOf(String schoolId) {
     return _db.collection('schools').doc(schoolId).collection('gaps');
+  }
+
+  CollectionReference<Map<String, dynamic>> _actionsOf(String schoolId) {
+    return _db.collection('schools').doc(schoolId).collection('actions');
   }
 
   /// Creates the school and its first (admin) user together, so we never end
@@ -65,6 +70,40 @@ class FirestoreService {
   Future<String> addGap(String schoolId, Gap gap) async {
     final ref = await _gapsOf(schoolId).add(gap.toMap());
     return ref.id;
+  }
+
+  Future<void> updateGapStatus(String schoolId, String gapId, String status) {
+    return _gapsOf(schoolId).doc(gapId).update({'status': status});
+  }
+
+  Future<List<ActionItem>> loadActions(String schoolId) async {
+    final snapshot = await _actionsOf(schoolId).get();
+    return snapshot.docs
+        .map((doc) => ActionItem.fromMap(doc.id, _withDates(doc.data())))
+        .toList();
+  }
+
+  /// Adds an action with a generated id and returns that id.
+  Future<String> addAction(String schoolId, ActionItem action) async {
+    final ref = await _actionsOf(schoolId)
+        .add({...action.toMap(), 'createdAt': FieldValue.serverTimestamp()});
+    return ref.id;
+  }
+
+  Future<void> updateActionStatus(
+    String schoolId,
+    String actionId,
+    String status,
+  ) {
+    return _actionsOf(schoolId).doc(actionId).update({'status': status});
+  }
+
+  /// Firestore returns Timestamps; models work with plain DateTime.
+  static Map<String, dynamic> _withDates(Map<String, dynamic> data) {
+    return data.map(
+      (key, value) =>
+          MapEntry(key, value is Timestamp ? value.toDate() : value),
+    );
   }
 
   /// Saves the answer and, if given, its checklist gap in one batch, so the

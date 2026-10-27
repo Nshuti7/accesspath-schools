@@ -1,6 +1,8 @@
 import 'package:go_router/go_router.dart';
 
 import 'providers/auth_provider.dart';
+import 'screens/actions/action_tracker_screen.dart';
+import 'screens/actions/assign_action_screen.dart';
 import 'screens/areas/areas_screen.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/auth/sign_up_screen.dart';
@@ -15,6 +17,8 @@ class AppRoutes {
   static const dashboard = '/';
   static const areas = '/areas';
   static const gaps = '/gaps';
+  static const actions = '/actions';
+  static String assignAction(String gapId) => '/gaps/$gapId/assign';
   static String checklist(String areaId) => '/areas/$areaId';
 
   /// With [itemId], the photo is checked against that one item only.
@@ -59,6 +63,17 @@ GoRouter buildRouter(AuthProvider auth) {
           GoRoute(
             path: 'gaps',
             builder: (context, state) => const GapReportScreen(),
+            routes: [
+              GoRoute(
+                path: ':gapId/assign',
+                builder: (context, state) =>
+                    AssignActionScreen(gapId: state.pathParameters['gapId']!),
+              ),
+            ],
+          ),
+          GoRoute(
+            path: 'actions',
+            builder: (context, state) => const ActionTrackerScreen(),
           ),
           GoRoute(
             path: 'areas',

@@ -1,14 +1,26 @@
 import 'package:flutter/material.dart';
 
+import '../../models/action_item.dart';
 import '../../models/assessment_area.dart';
 import '../../models/checklist_item.dart';
 import '../../models/gap.dart';
 import '../../strings.dart';
+import '../../widgets/status_badge.dart';
 
 class GapCard extends StatelessWidget {
-  const GapCard({super.key, required this.gap, required this.item});
+  const GapCard({
+    super.key,
+    required this.gap,
+    required this.item,
+    required this.action,
+    required this.onAssign,
+  });
 
   final Gap gap;
+
+  /// The action assigned to fix this gap, if there is one.
+  final ActionItem? action;
+  final VoidCallback onAssign;
 
   /// The linked checklist item, used for the guide page. Null if the item was
   /// removed from checklist.json after the gap was saved.
@@ -42,6 +54,7 @@ class GapCard extends StatelessWidget {
     final isPhoto = gap.source == Gap.sourceAiPhoto;
     final areaName = AssessmentArea.byId(gap.area)?.name ?? gap.area;
     final guideLabel = _guideLabel;
+    final assigned = action;
 
     return Card(
       child: Padding(
@@ -53,7 +66,7 @@ class GapCard extends StatelessWidget {
               spacing: 8,
               runSpacing: 8,
               children: [
-                _Badge(
+                StatusBadge(
                   label: isPhoto
                       ? AppStrings.sourceAiPhoto
                       : AppStrings.sourceChecklist,
@@ -65,7 +78,7 @@ class GapCard extends StatelessWidget {
                       ? colors.onTertiaryContainer
                       : colors.onSecondaryContainer,
                 ),
-                _Badge(
+                StatusBadge(
                   label: statusLabel(gap.status),
                   background: colors.surfaceContainerHighest,
                   foreground: colors.onSurface,
@@ -88,57 +101,37 @@ class GapCard extends StatelessWidget {
               Text(gap.aiDescription, style: theme.textTheme.bodyLarge),
             ],
             const SizedBox(height: 8),
-            Align(
-              alignment: Alignment.centerRight,
-              // Enabled once the Action tracker exists.
-              child: TextButton.icon(
-                onPressed: null,
-                icon: const Icon(Icons.person_add_alt_outlined),
-                label: const Text(AppStrings.assign),
+            if (assigned != null)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: Row(
+                  children: [
+                    Icon(Icons.person_outline, color: colors.primary),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        AppStrings.assignedTo(
+                          assigned.ownerName,
+                          assigned.dueDate,
+                        ),
+                        style: theme.textTheme.bodyMedium,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            // Resolved gaps need no new action.
+            else if (!gap.isResolved)
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton.icon(
+                  onPressed: onAssign,
+                  icon: const Icon(Icons.person_add_alt_outlined),
+                  label: const Text(AppStrings.assign),
+                ),
               ),
-            ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _Badge extends StatelessWidget {
-  const _Badge({
-    required this.label,
-    required this.background,
-    required this.foreground,
-    this.icon,
-  });
-
-  final String label;
-  final Color background;
-  final Color foreground;
-  final IconData? icon;
-
-  @override
-  Widget build(BuildContext context) {
-    final badgeIcon = icon;
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: background,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (badgeIcon != null) ...[
-            Icon(badgeIcon, size: 18, color: foreground),
-            const SizedBox(width: 4),
-          ],
-          Text(
-            label,
-            style: Theme.of(context).textTheme.bodyMedium
-                ?.copyWith(color: foreground),
-          ),
-        ],
       ),
     );
   }

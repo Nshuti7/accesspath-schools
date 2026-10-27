@@ -55,6 +55,45 @@ class AppStrings {
   static const mediumPriority = 'Medium priority';
   static const lowPriority = 'Low priority';
   static String resolvedGaps(int count) => 'Resolved gaps ($count)';
+  static const actionTracker = 'Action tracker';
+  static const assignAction = 'Assign action';
+  static const actionTitle = 'Action';
+  static const ownerName = 'Who will do it';
+  static const ownerHint = 'e.g. Facilities manager';
+  static const dueDate = 'Due date';
+  static const chooseDate = 'Choose a date';
+  static const notesOptional = 'Notes (optional)';
+  static const saveAction = 'Save action';
+  static const actionSaved = 'Action saved';
+  static const gapNotFound = 'This gap could not be found';
+  static const filterAll = 'All';
+  static const statusTodo = 'To do';
+  static const statusInProgress = 'In progress';
+  static const statusDone = 'Done';
+  static const changeStatus = 'Change status';
+  static const noActionsYet =
+      'No actions yet. Open the gap report and assign a gap to someone.';
+  static const noActionsForFilter = 'No actions with this status.';
+  static const markGapResolvedQuestion = 'Mark the gap as resolved too?';
+  static const yesResolve = 'Yes, resolve';
+  static const notNow = 'Not now';
+  static const gapMarkedResolved = 'Gap marked as resolved';
+  static String due(DateTime date) => 'Due ${formatDate(date)}';
+  static String overdue(DateTime date) =>
+      'Overdue, was due ${formatDate(date)}';
+  static String assignedTo(String owner, DateTime date) =>
+      'Assigned to $owner · due ${formatDate(date)}';
+
+  static const _months = [
+    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', //
+    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+  ];
+
+  /// Day-month-year with a written month, e.g. "3 Nov 2026", so it cannot be
+  /// misread the way 03/11/2026 can.
+  static String formatDate(DateTime date) =>
+      '${date.day} ${_months[date.month - 1]} ${date.year}';
+
   static const tryAgain = 'Try again';
   static const areaNotFound = 'This area could not be found';
   static String answeredOf(int answered, int total) =>
@@ -74,6 +113,12 @@ class AppStrings {
   static const errorSaveAnswer = 'Answer not saved. Please try again';
   static const errorSaveGap =
       'Could not add this to the gap report. Please try again';
+  static const errorLoadActions =
+      'Could not load actions. Check your connection and try again';
+  static const errorSaveAction = 'Action not saved. Please try again';
+  static const errorUpdateAction = 'Status not saved. Please try again';
+  static const errorUpdateGap = 'Gap not updated. Please try again';
+  static const errorChooseDate = 'Please choose a due date';
   static const errorCamera = 'Could not open the camera or photos';
   static const errorPhotoQuota =
       'The free photo check limit has been reached for now. '

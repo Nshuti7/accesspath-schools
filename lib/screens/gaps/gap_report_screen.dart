@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/gap.dart';
+import '../../providers/action_provider.dart';
 import '../../providers/assessment_provider.dart';
+import '../../router.dart';
 import '../../strings.dart';
 import '../../widgets/info_message.dart';
 import '../../widgets/load_error_view.dart';
@@ -35,16 +38,25 @@ class _GapReportScreenState extends State<GapReportScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text(AppStrings.gapReport)),
-      body: _buildBody(context.watch<AssessmentProvider>()),
+      body: _buildBody(
+        context.watch<AssessmentProvider>(),
+        context.watch<ActionProvider>(),
+      ),
     );
   }
 
-  Widget _buildBody(AssessmentProvider assessment) {
+  Widget _buildBody(AssessmentProvider assessment, ActionProvider actions) {
     final error = assessment.errorMessage;
     if (error != null) {
       return LoadErrorView(message: error, onRetry: assessment.ensureLoaded);
     }
-    if (!assessment.isReady) {
+    final actionError = actions.errorMessage;
+    if (actionError != null) {
+      return LoadErrorView(message: actionError, onRetry: actions.load);
+    }
+    // Wait for actions too, so Assign is never offered for a gap that
+    // already has one.
+    if (!assessment.isReady || !actions.isReady) {
       return const Center(child: CircularProgressIndicator());
     }
 
@@ -58,7 +70,12 @@ class _GapReportScreenState extends State<GapReportScreen> {
 
     Widget cardFor(Gap gap) => Padding(
       padding: const EdgeInsets.only(bottom: 12),
-      child: GapCard(gap: gap, item: assessment.itemById(gap.itemId)),
+      child: GapCard(
+        gap: gap,
+        item: assessment.itemById(gap.itemId),
+        action: actions.actionForGap(gap.id),
+        onAssign: () => context.go(AppRoutes.assignAction(gap.id)),
+      ),
     );
 
     return Center(
