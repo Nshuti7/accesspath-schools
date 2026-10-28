@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../layout.dart';
 import '../../models/assessment_area.dart';
-import '../../models/assessment_stats.dart';
-import '../../models/gap.dart';
+import '../../page_text.dart';
 import '../../providers/action_provider.dart';
 import '../../providers/assessment_provider.dart';
 import '../../providers/auth_provider.dart';
@@ -12,24 +12,43 @@ import '../../providers/school_provider.dart';
 import '../../router.dart';
 import '../../strings.dart';
 import '../../widgets/data_gate.dart';
+import '../../widgets/grid_row.dart';
 import '../../widgets/page_scaffold.dart';
 import 'area_progress_list.dart';
 import 'next_steps_card.dart';
 import 'score_card.dart';
 import 'start_assessment_card.dart';
-import 'stat_tile.dart';
+import 'stat_tiles.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
 
   /// Content width at which cards sit side by side instead of stacking.
   static const _twoColumnWidth = 720.0;
-  static const _nextStepsLimit = 3;
 
   @override
   Widget build(BuildContext context) {
+    final school = context.watch<SchoolProvider>();
+    final firstName = (school.user?.name ?? '').split(' ').first;
+    final answeredCount = context
+        .watch<AssessmentProvider>()
+        .stats
+        .answeredCount;
+    final schoolName = school.school?.name ?? '';
+    final greeting = AppStrings.greeting(DateTime.now(), firstName);
+
     return PageScaffold(
       title: AppStrings.navDashboard,
+      description: schoolName.isEmpty ? greeting : '$greeting  ·  $schoolName',
+      primaryAction: FilledButton.icon(
+        onPressed: () => context.go(AppRoutes.areas),
+        icon: const Icon(Icons.fact_check_outlined),
+        label: Text(
+          answeredCount > 0
+              ? PageText.continueAssessment
+              : PageText.startAssessment,
+        ),
+      ),
       appBarActions: [
         IconButton(
           // Push, so the back arrow returns to the dashboard.
@@ -53,6 +72,7 @@ class DashboardScreen extends StatelessWidget {
     final stats = assessment.stats;
     final firstName = (school.user?.name ?? '').split(' ').first;
     final theme = Theme.of(context);
+    final isDesktop = Breakpoints.isDesktop(context);
 
     final areaProgress = AreaProgressList(
       areas: [
@@ -65,6 +85,53 @@ class DashboardScreen extends StatelessWidget {
       ],
       onOpen: (area) => context.go(AppRoutes.checklist(area.id)),
     );
+    final startCard = StartAssessmentCard(
+      onStart: () => context.go(AppRoutes.areas),
+    );
+    final scoreCard = ScoreCard(stats: stats);
+    StatTiles statTiles({bool inOneRow = false}) => StatTiles(
+      stats: stats,
+      overdue: actions.overdueCount(DateTime.now()),
+      onOpenGaps: () => context.go(AppRoutes.gaps),
+      onOpenActions: () => context.go(AppRoutes.actions),
+      inOneRow: inOneRow,
+    );
+    final nextSteps = NextStepsCard(
+      gaps: NextStepsCard.pickGaps(assessment, actions),
+      // Push, so saving the action returns here.
+      onAssign: (gap) => context.push(AppRoutes.assignAction(gap.id)),
+    );
+
+    // Desktop: a 12-column grid. The greeting is already in the page header.
+    if (isDesktop) {
+      return ListView(
+        padding: const EdgeInsets.fromLTRB(Space.md, 0, Space.md, Space.lg),
+        children: stats.answeredCount == 0
+            ? [
+                GridRow(
+                  cells: [
+                    (span: 6, child: startCard),
+                    (span: 6, child: areaProgress),
+                  ],
+                ),
+              ]
+            : [
+                GridRow(
+                  cells: [
+                    (span: 4, child: scoreCard),
+                    (span: 8, child: statTiles(inOneRow: true)),
+                  ],
+                ),
+                const SizedBox(height: Space.md),
+                GridRow(
+                  cells: [
+                    (span: 6, child: nextSteps),
+                    (span: 6, child: areaProgress),
+                  ],
+                ),
+              ],
+      );
+    }
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -99,30 +166,13 @@ class DashboardScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 if (stats.answeredCount == 0) ...[
-                  StartAssessmentCard(
-                    onStart: () => context.go(AppRoutes.areas),
-                  ),
+                  startCard,
                   const SizedBox(height: 16),
                   areaProgress,
                 ] else ...[
-                  pair(
-                    ScoreCard(stats: stats),
-                    _statGrid(
-                      context,
-                      stats,
-                      actions.overdueCount(DateTime.now()),
-                    ),
-                  ),
+                  pair(scoreCard, statTiles()),
                   const SizedBox(height: 16),
-                  pair(
-                    NextStepsCard(
-                      gaps: _nextSteps(assessment, actions),
-                      // Push, so saving the action returns here.
-                      onAssign: (gap) =>
-                          context.push(AppRoutes.assignAction(gap.id)),
-                    ),
-                    areaProgress,
-                  ),
+                  pair(nextSteps, areaProgress),
                 ],
               ],
             ),
@@ -130,73 +180,5 @@ class DashboardScreen extends StatelessWidget {
         );
       },
     );
-  }
-
-  Widget _statGrid(BuildContext context, AssessmentStats stats, int overdue) {
-    void toGaps() => context.go(AppRoutes.gaps);
-    final tiles = [
-      StatTile(
-        count: stats.openGaps,
-        label: AppStrings.openGaps,
-        icon: Icons.report_outlined,
-        onTap: toGaps,
-      ),
-      StatTile(
-        count: stats.needsVerificationGaps,
-        label: AppStrings.statusNeedsVerification,
-        icon: Icons.help_outline,
-        onTap: toGaps,
-      ),
-      StatTile(
-        count: stats.resolvedGaps,
-        label: AppStrings.statusResolved,
-        icon: Icons.check_circle_outline,
-        onTap: toGaps,
-      ),
-      StatTile(
-        count: overdue,
-        label: AppStrings.overdueActions,
-        icon: Icons.warning_amber_rounded,
-        isWarning: overdue > 0,
-        onTap: () => context.go(AppRoutes.actions),
-      ),
-    ];
-    // Always two by two: four tiles in a row are too narrow on phones.
-    Widget row(Widget a, Widget b) => Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(child: a),
-        const SizedBox(width: 8),
-        Expanded(child: b),
-      ],
-    );
-    return Column(
-      children: [
-        row(tiles[0], tiles[1]),
-        const SizedBox(height: 8),
-        row(tiles[2], tiles[3]),
-      ],
-    );
-  }
-
-  /// Open (or verified) high-priority gaps with no action yet, in checklist
-  /// order so the list is stable between visits.
-  static List<Gap> _nextSteps(
-    AssessmentProvider assessment,
-    ActionProvider actions,
-  ) {
-    final order = {
-      for (final (index, item) in assessment.items.indexed) item.id: index,
-    };
-    int rank(Gap gap) => order[gap.itemId] ?? order.length;
-    final candidates = assessment.gaps.where(
-      (gap) =>
-          gap.priority == 'high' &&
-          (gap.status == Gap.statusOpen || gap.status == Gap.statusVerified) &&
-          actions.actionForGap(gap.id) == null,
-    );
-    return (candidates.toList()..sort((a, b) => rank(a).compareTo(rank(b))))
-        .take(_nextStepsLimit)
-        .toList();
   }
 }

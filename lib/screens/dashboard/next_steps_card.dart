@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../models/assessment_area.dart';
 import '../../models/gap.dart';
+import '../../providers/action_provider.dart';
+import '../../providers/assessment_provider.dart';
 import '../../strings.dart';
 
 class NextStepsCard extends StatelessWidget {
@@ -10,6 +12,29 @@ class NextStepsCard extends StatelessWidget {
   /// Already filtered and limited to the few to show.
   final List<Gap> gaps;
   final ValueChanged<Gap> onAssign;
+
+  static const _limit = 3;
+
+  /// Open (or verified) high-priority gaps with no action yet, in checklist
+  /// order so the list is stable between visits.
+  static List<Gap> pickGaps(
+    AssessmentProvider assessment,
+    ActionProvider actions,
+  ) {
+    final order = {
+      for (final (index, item) in assessment.items.indexed) item.id: index,
+    };
+    int rank(Gap gap) => order[gap.itemId] ?? order.length;
+    final candidates = assessment.gaps.where(
+      (gap) =>
+          gap.priority == 'high' &&
+          (gap.status == Gap.statusOpen || gap.status == Gap.statusVerified) &&
+          actions.actionForGap(gap.id) == null,
+    );
+    return (candidates.toList()..sort((a, b) => rank(a).compareTo(rank(b))))
+        .take(_limit)
+        .toList();
+  }
 
   @override
   Widget build(BuildContext context) {

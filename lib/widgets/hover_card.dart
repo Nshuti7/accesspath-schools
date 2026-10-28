@@ -39,7 +39,6 @@ class _HoverCardState extends State<HoverCard> {
       scale: _hovered ? 1.02 : 1,
       duration: const Duration(milliseconds: 120),
       child: Card(
-        margin: EdgeInsets.zero,
         elevation: _hovered ? 4 : 1,
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(
