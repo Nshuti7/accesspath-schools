@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import '../../page_text.dart';
+import '../../layout.dart';
 import '../../models/assessment_area.dart';
+import '../../page_text.dart';
 import '../../providers/assessment_provider.dart';
 import '../../router.dart';
 import '../../strings.dart';
@@ -19,13 +20,39 @@ class AreasScreen extends StatefulWidget {
 }
 
 class _AreasScreenState extends State<AreasScreen> {
+  bool _openedFirstArea = false;
+
+  /// Desktop has no separate areas page: the checklist split view lists the
+  /// areas itself, so open the first one that still has questions to answer.
+  void _openFirstUnfinishedArea(AssessmentProvider assessment) {
+    if (_openedFirstArea) return;
+    _openedFirstArea = true;
+    final area = AssessmentArea.all.firstWhere(
+      (area) =>
+          assessment.answeredCountForArea(area.id) <
+          assessment.itemsForArea(area.id).length,
+      orElse: () => AssessmentArea.all.first,
+    );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) context.go(AppRoutes.checklist(area.id));
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final isDesktop = Breakpoints.isDesktop(context);
     return PageScaffold(
       title: AppStrings.assessmentAreas,
       description: PageText.assess,
       body: DataGate(
-        builder: (context) => _buildBody(context.watch<AssessmentProvider>()),
+        builder: (context) {
+          final assessment = context.watch<AssessmentProvider>();
+          if (isDesktop) {
+            _openFirstUnfinishedArea(assessment);
+            return const Center(child: CircularProgressIndicator());
+          }
+          return _buildBody(assessment);
+        },
       ),
     );
   }

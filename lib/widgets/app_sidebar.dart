@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../layout.dart';
 import '../page_text.dart';
 import '../strings.dart';
+import 'selectable_tile.dart';
 
 typedef SidebarDestination = ({
   String route,
@@ -73,7 +74,7 @@ class AppSidebar extends StatelessWidget {
               child: ListView(
                 children: [
                   for (final (index, destination) in destinations.indexed)
-                    _SidebarItem(
+                    SelectableTile(
                       icon: index == selectedIndex
                           ? destination.selectedIcon
                           : destination.icon,
@@ -87,97 +88,20 @@ class AppSidebar extends StatelessWidget {
           ),
           const Divider(),
           if (schoolName.isNotEmpty)
-            _SidebarItem(
+            SelectableTile(
               icon: Icons.school_outlined,
               label: schoolName,
               isSelected: false,
               onTap: onOpenSchool,
               semanticsHint: PageText.openSchoolProfile,
             ),
-          _SidebarItem(
+          SelectableTile(
             icon: Icons.logout,
             label: AppStrings.logOut,
             isSelected: false,
             onTap: onLogOut,
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _SidebarItem extends StatelessWidget {
-  const _SidebarItem({
-    required this.icon,
-    required this.label,
-    required this.isSelected,
-    required this.onTap,
-    this.semanticsHint,
-  });
-
-  final IconData icon;
-  final String label;
-  final bool isSelected;
-  final VoidCallback onTap;
-  final String? semanticsHint;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colors = theme.colorScheme;
-    final foreground = isSelected
-        ? colors.onPrimaryContainer
-        : colors.onSurface;
-
-    return Padding(
-      padding: const EdgeInsets.only(bottom: Space.xs / 2),
-      child: Semantics(
-        button: true,
-        selected: isSelected,
-        hint: semanticsHint,
-        child: Material(
-          // Filled background plus bold text and a bar, never colour alone.
-          color: isSelected ? colors.primaryContainer : Colors.transparent,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          clipBehavior: Clip.antiAlias,
-          child: InkWell(
-            onTap: onTap,
-            focusColor: colors.primary.withValues(alpha: 0.16),
-            child: Container(
-              height: 48,
-              decoration: BoxDecoration(
-                border: Border(
-                  left: BorderSide(
-                    color: isSelected ? colors.primary : Colors.transparent,
-                    width: 4,
-                  ),
-                ),
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: Row(
-                children: [
-                  Icon(icon, color: isSelected ? colors.primary : foreground),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      label,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        color: foreground,
-                        fontWeight: isSelected
-                            ? FontWeight.w700
-                            : FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
       ),
     );
   }
