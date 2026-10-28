@@ -15,6 +15,7 @@ import 'screens/guide/guide_assistant_screen.dart';
 import 'screens/photo_check/photo_check_screen.dart';
 import 'screens/school/school_profile_screen.dart';
 import 'widgets/app_shell.dart';
+import 'widgets/offline_banner.dart';
 
 class AppRoutes {
   static const login = '/login';
@@ -70,7 +71,7 @@ GoRouter buildRouter(AuthProvider auth) {
           schoolName: context.watch<SchoolProvider>().school?.name ?? '',
           onOpenSchool: () => context.go(AppRoutes.schoolProfile),
           onLogOut: auth.signOut,
-          child: child,
+          child: OfflineBanner(uid: auth.user?.uid ?? '', child: child),
         ),
         routes: [
           GoRoute(

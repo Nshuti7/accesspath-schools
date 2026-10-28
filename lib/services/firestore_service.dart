@@ -12,6 +12,24 @@ class FirestoreService {
 
   final FirebaseFirestore _db;
 
+  /// True while Firestore can reach the server. Watches the user's own doc
+  /// because every signed-in user may read it, and no package is needed.
+  Stream<bool> watchOnline(String uid) {
+    var reachedServer = false;
+    return _db
+        .collection('users')
+        .doc(uid)
+        .snapshots(includeMetadataChanges: true)
+        .map((snapshot) {
+          final fromCache = snapshot.metadata.isFromCache;
+          if (!fromCache) reachedServer = true;
+          // The first snapshot often comes from the cache while still
+          // connecting, which is not the same as being offline.
+          return !fromCache || !reachedServer;
+        })
+        .distinct();
+  }
+
   CollectionReference<Map<String, dynamic>> _answersOf(String schoolId) {
     return _db.collection('schools').doc(schoolId).collection('answers');
   }

@@ -178,6 +178,9 @@ class AppStrings {
   static const errorWeakPassword = 'Password must be at least 6 characters';
   static const errorAccountDisabled = 'This account has been turned off';
   static const errorOffline = 'No internet connection. Please try again';
+  static const offlineBanner =
+      'You are offline. Changes will save when you are back online. '
+      'Keep the app open until then.';
   static const errorTooManyTries = 'Too many tries. Please wait and try again';
   static const errorGeneric = 'Something went wrong. Please try again';
   static const errorLoadAssessment =
