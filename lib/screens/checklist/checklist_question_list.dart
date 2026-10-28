@@ -50,8 +50,9 @@ class ChecklistQuestionList extends StatelessWidget {
     final offset = showPhotoButton ? 1 : 0;
 
     return ListView.separated(
-      // A new list per area, so switching areas starts at the top.
-      key: PageStorageKey(area.id),
+      // A new list per area, so switching areas starts at the top. A plain
+      // key: this list has nothing it needs to remember.
+      key: ValueKey(area.id),
       padding: padding,
       itemCount: items.length + offset,
       separatorBuilder: (_, _) => const SizedBox(height: 12),

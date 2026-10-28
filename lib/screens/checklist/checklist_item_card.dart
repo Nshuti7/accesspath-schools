@@ -64,6 +64,10 @@ class ChecklistItemCard extends StatelessWidget {
               ],
             ),
             ExpansionTile(
+              // Its own storage slot. Without it the tile shared the list's
+              // slot, read the saved scroll offset as its open flag and
+              // crashed, leaving a grey card (AS-38).
+              key: PageStorageKey('why_${item.id}'),
               title: const Text(AppStrings.whyThisMatters),
               tilePadding: EdgeInsets.zero,
               childrenPadding: const EdgeInsets.only(bottom: 12),
