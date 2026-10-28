@@ -14,6 +14,10 @@ ctrl-freaks.youtrack.cloud. Each team member has a parent task with subtasks, pr
 due dates and states (To do, In Progress, Done). Testers file bugs as new AS issues linked
 to their testing task, and we track each fix to Done.
 
+![Our YouTrack board](screenshots/youtrack-board.png)
+
+![Our YouTrack issue list](screenshots/youtrack-issues.png)
+
 **Development.** Flutter, Firebase and Gemini, built with help from Claude Code. Every
 feature was reviewed and committed in small steps on GitHub.
 
