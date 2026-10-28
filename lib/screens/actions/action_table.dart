@@ -55,7 +55,7 @@ class ActionTable extends StatelessWidget {
         TableColumnSpec(
           label: PageText.columnQuestion,
           cell: (action) => SizedBox(
-            width: 320,
+            width: 240,
             child: Text(
               action.title,
               maxLines: 2,

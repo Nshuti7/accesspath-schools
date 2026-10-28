@@ -24,23 +24,34 @@ class DueDateText extends StatelessWidget {
       );
     }
     if (!isOverdue) return Text(AppStrings.formatDate(due));
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(
-          Icons.warning_amber_rounded,
-          size: 20,
-          color: theme.colorScheme.error,
-        ),
-        const SizedBox(width: 4),
-        Text(
-          '${PageText.overdue}, ${AppStrings.formatDate(due)}',
-          style: theme.textTheme.bodyMedium?.copyWith(
-            color: theme.colorScheme.error,
-            fontWeight: FontWeight.w700,
+    final overdueStyle = theme.textTheme.bodyMedium?.copyWith(
+      color: theme.colorScheme.error,
+      fontWeight: FontWeight.w700,
+    );
+    // Two lines keep the cell as narrow as a plain date, so the column
+    // still fits on a laptop screen.
+    return Semantics(
+      label: '${PageText.overdue}, ${AppStrings.formatDate(due)}',
+      excludeSemantics: true,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.warning_amber_rounded,
+                size: 18,
+                color: theme.colorScheme.error,
+              ),
+              const SizedBox(width: 4),
+              Text(PageText.overdue, style: overdueStyle),
+            ],
           ),
-        ),
-      ],
+          Text(AppStrings.formatDate(due), style: overdueStyle),
+        ],
+      ),
     );
   }
 }

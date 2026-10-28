@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../layout.dart';
+
 class TableColumnSpec<T> {
   const TableColumnSpec({
     required this.label,
@@ -60,6 +62,9 @@ class _SortableTableState<T> extends State<SortableTable<T>> {
             sortColumnIndex: _sortColumn,
             sortAscending: _ascending,
             showCheckboxColumn: false,
+            // The default 56 px gaps push the last column off a laptop screen.
+            columnSpacing: Space.md,
+            horizontalMargin: Space.sm,
             dataRowMinHeight: 56,
             dataRowMaxHeight: 80,
             columns: [

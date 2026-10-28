@@ -46,7 +46,7 @@ class GapTable extends StatelessWidget {
         TableColumnSpec(
           label: PageText.columnQuestion,
           cell: (gap) => SizedBox(
-            width: 320,
+            width: 240,
             child: Text(
               gap.title,
               maxLines: 2,
