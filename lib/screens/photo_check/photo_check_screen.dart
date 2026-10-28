@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
+import '../../page_text.dart';
 import '../../models/checklist_item.dart';
 import '../../models/photo_finding.dart';
 import '../../providers/assessment_provider.dart';
@@ -12,6 +13,7 @@ import '../../strings.dart';
 import '../../widgets/form_error_text.dart';
 import '../../widgets/info_message.dart';
 import '../../widgets/data_gate.dart';
+import '../../widgets/page_scaffold.dart';
 import 'finding_card.dart';
 import 'photo_picker_panel.dart';
 
@@ -121,8 +123,9 @@ class _PhotoCheckScreenState extends State<PhotoCheckScreen> {
   Widget build(BuildContext context) {
     final assessment = context.watch<AssessmentProvider>();
 
-    return Scaffold(
-      appBar: AppBar(title: const Text(AppStrings.photoCheck)),
+    return PageScaffold(
+      title: AppStrings.photoCheck,
+      description: PageText.photoCheck,
       body: DataGate(builder: (context) => _buildBody(assessment)),
     );
   }

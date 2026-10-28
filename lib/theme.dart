@@ -40,6 +40,14 @@ ThemeData _buildTheme() {
     borderRadius: BorderRadius.circular(12),
   );
 
+  // Material 3 only tints a focused button, which is easy to miss. A dark
+  // outline shows keyboard users exactly where they are.
+  final focusOutline = WidgetStateProperty.resolveWith<BorderSide?>(
+    (states) => states.contains(WidgetState.focused)
+        ? BorderSide(color: colorScheme.onSurface, width: 3)
+        : null,
+  );
+
   return base.copyWith(
     textTheme: textTheme,
     scaffoldBackgroundColor: Colors.white,
@@ -48,12 +56,33 @@ ThemeData _buildTheme() {
         minimumSize: minButtonSize,
         textStyle: textTheme.labelLarge,
         shape: buttonShape,
+      ).copyWith(side: focusOutline),
+    ),
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: ButtonStyle(
+        side: WidgetStateProperty.resolveWith(
+          (states) => states.contains(WidgetState.focused)
+              ? BorderSide(color: colorScheme.onSurface, width: 3)
+              : BorderSide(color: colorScheme.outline),
+        ),
       ),
     ),
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
         minimumSize: const Size(48, 48),
         textStyle: textTheme.bodyLarge,
+      ).copyWith(side: focusOutline),
+    ),
+    dataTableTheme: DataTableThemeData(
+      headingTextStyle: textTheme.labelLarge?.copyWith(fontSize: 16),
+      dataTextStyle: textTheme.bodyMedium,
+      // Hover and keyboard focus are both visible on table rows.
+      dataRowColor: WidgetStateProperty.resolveWith(
+        (states) => states.contains(WidgetState.focused)
+            ? colorScheme.primaryContainer
+            : states.contains(WidgetState.hovered)
+            ? colorScheme.surfaceContainerHigh
+            : null,
       ),
     ),
     inputDecorationTheme: InputDecorationTheme(

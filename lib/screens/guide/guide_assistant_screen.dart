@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../page_text.dart';
 import '../../providers/guide_chat_provider.dart';
 import '../../services/ai_call.dart';
 import '../../strings.dart';
 import '../../widgets/form_error_text.dart';
+import '../../widgets/page_scaffold.dart';
 import 'chat_bubble.dart';
 import 'chat_input_bar.dart';
 import 'starter_questions.dart';
@@ -66,8 +68,9 @@ class _GuideAssistantScreenState extends State<GuideAssistantScreen> {
     final messages = chat.messages;
     final error = chat.error;
 
-    return Scaffold(
-      appBar: AppBar(title: const Text(AppStrings.guideAssistant)),
+    return PageScaffold(
+      title: AppStrings.guideAssistant,
+      description: PageText.guide,
       body: Column(
         children: [
           Expanded(

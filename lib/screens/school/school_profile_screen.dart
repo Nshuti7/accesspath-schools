@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../page_text.dart';
 import '../../providers/school_provider.dart';
 import '../../strings.dart';
 import '../../validators.dart';
@@ -8,6 +9,7 @@ import '../../widgets/data_gate.dart';
 import '../../widgets/district_field.dart';
 import '../../widgets/school_type_field.dart';
 import '../../widgets/submit_button.dart';
+import '../../widgets/page_scaffold.dart';
 
 class SchoolProfileScreen extends StatefulWidget {
   const SchoolProfileScreen({super.key});
@@ -51,8 +53,9 @@ class _SchoolProfileScreenState extends State<SchoolProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text(AppStrings.schoolProfile)),
+    return PageScaffold(
+      title: AppStrings.schoolProfile,
+      description: PageText.schoolProfile,
       body: DataGate(builder: _buildForm),
     );
   }

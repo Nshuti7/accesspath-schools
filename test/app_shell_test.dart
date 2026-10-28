@@ -1,4 +1,5 @@
 import 'package:accesspath_schools/widgets/app_shell.dart';
+import 'package:accesspath_schools/widgets/app_sidebar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -20,10 +21,47 @@ void main() {
     expect(find.byType(NavigationRail), findsNothing);
   });
 
-  testWidgets('wide screens get a side rail', (tester) async {
-    await pumpShell(tester, 1200, '/');
+  testWidgets('small tablets get a side rail', (tester) async {
+    await pumpShell(tester, 900, '/');
     expect(find.byType(NavigationRail), findsOneWidget);
     expect(find.byType(NavigationBar), findsNothing);
+  });
+
+  testWidgets('desktop gets the full sidebar with school and log out', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(1280, 800);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    var loggedOut = false;
+    await tester.pumpWidget(
+      MaterialApp(
+        home: AppShell(
+          location: '/gaps',
+          schoolName: 'Kololo Primary',
+          onLogOut: () => loggedOut = true,
+          child: const SizedBox(),
+        ),
+      ),
+    );
+
+    expect(find.byType(AppSidebar), findsOneWidget);
+    expect(find.byType(NavigationRail), findsNothing);
+    expect(find.text('Kololo Primary'), findsOneWidget);
+    expect(
+      tester.getSemantics(find.text('Gaps')),
+      matchesSemantics(
+        isSelected: true,
+        hasSelectedState: true,
+        isButton: true,
+        hasTapAction: true,
+        hasFocusAction: true,
+        isFocusable: true,
+        label: 'Gaps',
+      ),
+    );
+    await tester.tap(find.text('Log out'));
+    expect(loggedOut, isTrue);
   });
 
   testWidgets('a checklist page keeps Assess selected', (tester) async {

@@ -12,6 +12,7 @@ import '../../providers/school_provider.dart';
 import '../../router.dart';
 import '../../strings.dart';
 import '../../widgets/data_gate.dart';
+import '../../widgets/page_scaffold.dart';
 import 'area_progress_list.dart';
 import 'next_steps_card.dart';
 import 'score_card.dart';
@@ -27,22 +28,20 @@ class DashboardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(AppStrings.navDashboard),
-        actions: [
-          IconButton(
-            // Push, so the back arrow returns to the dashboard.
-            onPressed: () => context.push(AppRoutes.schoolProfile),
-            icon: const Icon(Icons.school_outlined),
-            tooltip: AppStrings.schoolProfile,
-          ),
-          TextButton(
-            onPressed: () => context.read<AuthProvider>().signOut(),
-            child: const Text(AppStrings.logOut),
-          ),
-        ],
-      ),
+    return PageScaffold(
+      title: AppStrings.navDashboard,
+      appBarActions: [
+        IconButton(
+          // Push, so the back arrow returns to the dashboard.
+          onPressed: () => context.push(AppRoutes.schoolProfile),
+          icon: const Icon(Icons.school_outlined),
+          tooltip: AppStrings.schoolProfile,
+        ),
+        TextButton(
+          onPressed: () => context.read<AuthProvider>().signOut(),
+          child: const Text(AppStrings.logOut),
+        ),
+      ],
       body: DataGate(needsActions: true, builder: _buildBody),
     );
   }

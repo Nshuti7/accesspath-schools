@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../page_text.dart';
 import '../../models/gap.dart';
 import '../../providers/action_provider.dart';
 import '../../providers/assessment_provider.dart';
@@ -9,6 +10,7 @@ import '../../validators.dart';
 import '../../strings.dart';
 import '../../widgets/data_gate.dart';
 import '../../widgets/submit_button.dart';
+import '../../widgets/page_scaffold.dart';
 import 'due_date_field.dart';
 
 class AssignActionScreen extends StatefulWidget {
@@ -65,8 +67,9 @@ class _AssignActionScreenState extends State<AssignActionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text(AppStrings.assignAction)),
+    return PageScaffold(
+      title: AppStrings.assignAction,
+      description: PageText.assignAction,
       body: DataGate(
         builder: (context) => _buildBody(context.watch<AssessmentProvider>()),
       ),

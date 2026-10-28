@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../page_text.dart';
 import '../../models/action_item.dart';
 import '../../models/gap.dart';
 import '../../providers/action_provider.dart';
@@ -8,6 +9,7 @@ import '../../providers/assessment_provider.dart';
 import '../../strings.dart';
 import '../../widgets/info_message.dart';
 import '../../widgets/data_gate.dart';
+import '../../widgets/page_scaffold.dart';
 import 'action_card.dart';
 import 'status_sheet.dart';
 
@@ -75,8 +77,9 @@ class _ActionTrackerScreenState extends State<ActionTrackerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text(AppStrings.actionTracker)),
+    return PageScaffold(
+      title: AppStrings.actionTracker,
+      description: PageText.actions,
       body: DataGate(
         needsActions: true,
         builder: (context) => _buildBody(

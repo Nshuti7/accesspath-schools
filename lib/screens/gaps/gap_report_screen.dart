@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../page_text.dart';
 import '../../models/gap.dart';
 import '../../models/report_summary.dart';
 import '../../providers/action_provider.dart';
@@ -12,6 +13,7 @@ import '../../services/report_summary_service.dart';
 import '../../strings.dart';
 import '../../widgets/info_message.dart';
 import '../../widgets/data_gate.dart';
+import '../../widgets/page_scaffold.dart';
 import 'gap_card.dart';
 import 'gap_summary.dart';
 import 'report_summary_card.dart';
@@ -34,8 +36,9 @@ class _GapReportScreenState extends State<GapReportScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text(AppStrings.gapReport)),
+    return PageScaffold(
+      title: AppStrings.gapReport,
+      description: PageText.gaps,
       body: DataGate(
         needsActions: true,
         builder: (context) => _buildBody(

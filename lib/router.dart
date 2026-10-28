@@ -1,6 +1,8 @@
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 import 'providers/auth_provider.dart';
+import 'providers/school_provider.dart';
 import 'screens/actions/action_tracker_screen.dart';
 import 'screens/actions/assign_action_screen.dart';
 import 'screens/areas/areas_screen.dart';
@@ -63,8 +65,13 @@ GoRouter buildRouter(AuthProvider auth) {
       // Every signed-in page sits inside the shell, so the navigation bar or
       // rail stays visible. Sub-pages are nested so the back arrow works.
       ShellRoute(
-        builder: (context, state, child) =>
-            AppShell(location: state.uri.path, child: child),
+        builder: (context, state, child) => AppShell(
+          location: state.uri.path,
+          schoolName: context.watch<SchoolProvider>().school?.name ?? '',
+          onOpenSchool: () => context.go(AppRoutes.schoolProfile),
+          onLogOut: auth.signOut,
+          child: child,
+        ),
         routes: [
           GoRoute(
             path: AppRoutes.dashboard,

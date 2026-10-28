@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../page_text.dart';
 import '../../models/answer.dart';
 import '../../models/assessment_area.dart';
 import '../../models/checklist_item.dart';
@@ -9,6 +10,7 @@ import '../../providers/assessment_provider.dart';
 import '../../router.dart';
 import '../../strings.dart';
 import '../../widgets/data_gate.dart';
+import '../../widgets/page_scaffold.dart';
 import 'checklist_item_card.dart';
 
 class ChecklistScreen extends StatefulWidget {
@@ -37,8 +39,9 @@ class _ChecklistScreenState extends State<ChecklistScreen> {
   Widget build(BuildContext context) {
     final area = AssessmentArea.byId(widget.areaId);
 
-    return Scaffold(
-      appBar: AppBar(title: Text(area?.name ?? AppStrings.assessmentAreas)),
+    return PageScaffold(
+      title: area?.name ?? AppStrings.assessmentAreas,
+      description: PageText.assess,
       body: area == null
           ? const Center(child: Text(AppStrings.areaNotFound))
           : DataGate(

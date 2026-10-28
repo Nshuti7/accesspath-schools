@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../page_text.dart';
 import '../../models/assessment_area.dart';
 import '../../providers/assessment_provider.dart';
 import '../../router.dart';
 import '../../strings.dart';
 import '../../widgets/data_gate.dart';
+import '../../widgets/page_scaffold.dart';
 import 'area_card.dart';
 
 class AreasScreen extends StatefulWidget {
@@ -19,8 +21,9 @@ class AreasScreen extends StatefulWidget {
 class _AreasScreenState extends State<AreasScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text(AppStrings.assessmentAreas)),
+    return PageScaffold(
+      title: AppStrings.assessmentAreas,
+      description: PageText.assess,
       body: DataGate(
         builder: (context) => _buildBody(context.watch<AssessmentProvider>()),
       ),

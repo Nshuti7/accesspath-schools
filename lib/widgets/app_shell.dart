@@ -1,18 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../layout.dart';
 import '../router.dart';
 import '../strings.dart';
+import 'app_sidebar.dart';
 
-/// Main navigation: a side rail on wide screens (tablet, laptop browser) and a
-/// bottom bar on phones, where the thumb can reach it.
+/// Main navigation: a full sidebar on desktop, a side rail on small tablets,
+/// and a bottom bar on phones, where the thumb can reach it.
 class AppShell extends StatelessWidget {
-  const AppShell({super.key, required this.location, required this.child});
+  const AppShell({
+    super.key,
+    required this.location,
+    required this.child,
+    this.schoolName = '',
+    this.onOpenSchool,
+    this.onLogOut,
+  });
 
-  /// Wide enough for the rail plus a comfortable content column.
-  static const wideBreakpoint = 800.0;
-
-  static const _destinations = [
+  static const List<SidebarDestination> _destinations = [
     (
       route: AppRoutes.dashboard,
       label: AppStrings.navDashboard,
@@ -48,6 +54,11 @@ class AppShell extends StatelessWidget {
   final String location;
   final Widget child;
 
+  /// Shown at the bottom of the desktop sidebar.
+  final String schoolName;
+  final VoidCallback? onOpenSchool;
+  final VoidCallback? onLogOut;
+
   /// Sub-pages keep their section highlighted, e.g. a checklist under Assess.
   int get _selectedIndex {
     for (var i = _destinations.length - 1; i > 0; i--) {
@@ -62,9 +73,28 @@ class AppShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isWide = MediaQuery.sizeOf(context).width >= wideBreakpoint;
+    final width = MediaQuery.sizeOf(context).width;
 
-    if (isWide) {
+    if (width >= Breakpoints.desktop) {
+      return Scaffold(
+        body: Row(
+          children: [
+            AppSidebar(
+              destinations: _destinations,
+              selectedIndex: _selectedIndex,
+              onSelected: (index) => _onSelected(context, index),
+              schoolName: schoolName,
+              onOpenSchool: onOpenSchool ?? () {},
+              onLogOut: onLogOut ?? () {},
+            ),
+            const VerticalDivider(width: 1),
+            Expanded(child: child),
+          ],
+        ),
+      );
+    }
+
+    if (width >= Breakpoints.rail) {
       return Scaffold(
         body: Row(
           children: [
