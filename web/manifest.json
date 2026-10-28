@@ -4,7 +4,7 @@
     "start_url": ".",
     "display": "standalone",
     "background_color": "#FFFFFF",
-    "theme_color": "#0B4F8A",
+    "theme_color": "#142D52",
     "description": "Check school buildings against the Ministry of Education and Sports School Accessibility Companion Guide, see what is missing and track fixes.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,

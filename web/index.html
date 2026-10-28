@@ -19,7 +19,7 @@
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="Check school buildings against the Ministry of Education and Sports School Accessibility Companion Guide, see what is missing and track fixes.">
-  <meta name="theme-color" content="#0B4F8A">
+  <meta name="theme-color" content="#142D52">
 
   <!-- iOS meta tags & icons -->
   <meta name="mobile-web-app-capable" content="yes">
@@ -32,8 +32,33 @@
 
   <title>AccessPath Schools</title>
   <link rel="manifest" href="manifest.json">
+  <style>
+    html, body { margin: 0; height: 100%; background: #FFFFFF; }
+    #splash {
+      position: fixed; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      transition: opacity 0.3s ease;
+    }
+    #splash img { width: min(240px, 60vw); height: auto; }
+    #splash.hidden { opacity: 0; }
+    @media (prefers-reduced-motion: reduce) {
+      #splash { transition: none; }
+    }
+  </style>
 </head>
 <body>
+  <!-- Shown while the app downloads, then faded out on Flutter's first frame. -->
+  <div id="splash" role="status">
+    <img src="splash-logo.svg" alt="AccessPath is loading">
+  </div>
+  <script>
+    window.addEventListener('flutter-first-frame', function () {
+      var splash = document.getElementById('splash');
+      if (!splash) return;
+      splash.classList.add('hidden');
+      setTimeout(function () { splash.remove(); }, 300);
+    });
+  </script>
   <!--
     You can customize the "flutter_bootstrap.js" script.
     This is useful to provide a custom configuration to the Flutter loader
