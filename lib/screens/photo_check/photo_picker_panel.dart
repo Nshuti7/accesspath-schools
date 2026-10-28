@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../strings.dart';
 
@@ -15,7 +16,13 @@ class PhotoPickerPanel extends StatelessWidget {
 
   final Uint8List? imageBytes;
   final bool isChecking;
-  final VoidCallback onPick;
+  final ValueChanged<ImageSource> onPick;
+
+  /// Phones and tablets open the camera straight away, in the app and in the
+  /// browser. Computers usually have no useful camera, so they pick a file.
+  static bool get _canUseCamera =>
+      defaultTargetPlatform == TargetPlatform.android ||
+      defaultTargetPlatform == TargetPlatform.iOS;
 
   @override
   Widget build(BuildContext context) {
@@ -61,16 +68,29 @@ class PhotoPickerPanel extends StatelessWidget {
               ),
             ],
             const SizedBox(height: 16),
-            FilledButton.icon(
-              onPressed: isChecking ? null : onPick,
-              // On the web there is often no camera, so offer a file instead.
-              icon: Icon(
-                kIsWeb ? Icons.upload_file : Icons.photo_camera_outlined,
+            if (_canUseCamera) ...[
+              FilledButton.icon(
+                onPressed: isChecking ? null : () => onPick(ImageSource.camera),
+                icon: const Icon(Icons.photo_camera_outlined),
+                label: const Text(AppStrings.takePhoto),
               ),
-              label: Text(
-                kIsWeb ? AppStrings.choosePhoto : AppStrings.takePhoto,
+              const SizedBox(height: 8),
+              // For photos taken earlier, e.g. while walking around the school.
+              TextButton.icon(
+                onPressed: isChecking
+                    ? null
+                    : () => onPick(ImageSource.gallery),
+                icon: const Icon(Icons.photo_library_outlined),
+                label: const Text(AppStrings.chooseFromGallery),
               ),
-            ),
+            ] else
+              FilledButton.icon(
+                onPressed: isChecking
+                    ? null
+                    : () => onPick(ImageSource.gallery),
+                icon: const Icon(Icons.upload_file),
+                label: const Text(AppStrings.choosePhoto),
+              ),
           ],
         ),
       ),

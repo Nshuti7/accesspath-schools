@@ -95,6 +95,7 @@ class AppStrings {
   static const checkPhotoOfArea = 'Check a photo of this area';
   static const takePhoto = 'Take photo';
   static const choosePhoto = 'Choose photo';
+  static const chooseFromGallery = 'Choose from gallery';
   static const photoCheckIntro =
       'Take a clear photo of the place you are checking. '
       'Gemini will look for possible barriers. A person must always confirm them.';

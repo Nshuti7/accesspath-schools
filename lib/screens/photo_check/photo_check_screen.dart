@@ -49,14 +49,14 @@ class _PhotoCheckScreenState extends State<PhotoCheckScreen> {
     return assessment.itemsForArea(widget.areaId);
   }
 
-  Future<void> _pickAndCheck() async {
+  Future<void> _pickAndCheck(ImageSource source) async {
     final items = _itemsToCheck(context.read<AssessmentProvider>());
     if (items.isEmpty) return;
 
     final XFile? file;
     try {
       file = await ImagePicker().pickImage(
-        source: kIsWeb ? ImageSource.gallery : ImageSource.camera,
+        source: source,
         maxWidth: 1280,
         imageQuality: 70,
         // Skips location and other metadata we do not need.
