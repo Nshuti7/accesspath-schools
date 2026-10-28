@@ -26,6 +26,8 @@ class _DistrictFieldState extends State<DistrictField> {
   static const _other = AppStrings.otherDistrict;
 
   final _otherController = TextEditingController();
+  final _searchController = TextEditingController();
+  final _fieldKey = GlobalKey<FormFieldState<String>>();
   String? _selection;
 
   @override
@@ -38,12 +40,35 @@ class _DistrictFieldState extends State<DistrictField> {
       _selection = _other;
       _otherController.text = initial;
     }
+    _searchController.addListener(_matchTypedName);
   }
 
   @override
   void dispose() {
     _otherController.dispose();
+    _searchController.dispose();
     super.dispose();
+  }
+
+  /// Typing a full district name counts as choosing it, so people who type
+  /// "Kampala" and move on are not told to choose a district.
+  void _matchTypedName() {
+    final typed = _searchController.text.trim().toLowerCase();
+    String? match;
+    for (final district in [...ugandaDistricts, _other]) {
+      if (district.toLowerCase() == typed) match = district;
+    }
+    if (match == _selection) return;
+    // Editing the text away from the chosen name clears the choice, so the
+    // box never shows one district while the form saves another.
+    if (match == null && _selection == null) return;
+    _select(match);
+  }
+
+  void _select(String? value) {
+    _fieldKey.currentState?.didChange(value);
+    setState(() => _selection = value);
+    _report();
   }
 
   void _report() {
@@ -58,10 +83,12 @@ class _DistrictFieldState extends State<DistrictField> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         FormField<String>(
+          key: _fieldKey,
           initialValue: _selection,
           validator: (value) =>
               value == null ? AppStrings.errorChooseDistrict : null,
           builder: (state) => DropdownMenu<String>(
+            controller: _searchController,
             initialSelection: _selection,
             expandedInsets: EdgeInsets.zero,
             // Typing filters the long list, e.g. "Kab" for Kabale.
@@ -74,11 +101,7 @@ class _DistrictFieldState extends State<DistrictField> {
               for (final district in [...ugandaDistricts, _other])
                 DropdownMenuEntry(value: district, label: district),
             ],
-            onSelected: (value) {
-              state.didChange(value);
-              setState(() => _selection = value);
-              _report();
-            },
+            onSelected: _select,
           ),
         ),
         if (_selection == _other) ...[
