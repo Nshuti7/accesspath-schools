@@ -2,7 +2,7 @@
   {
     "id": "entrances_door_width",
     "area": "entrances_exits",
-    "question": "Are classroom doors at least 0.9 m wide when open (primary) or 1.2 m wide (secondary)?",
+    "question": "Are classroom doors wide enough? When open, at least 0.9 m in a primary school or 1.2 m in a secondary school.",
     "whyItMatters": "A narrower door stops a wheelchair user from getting into the room.",
     "recommendation": "Widen doorways to a clear opening of at least 0.9 m (primary) or 1.2 m (secondary). A two-leaf door of 0.2 m + 1.0 m meets the secondary width (Guide p. 8).",
     "guideRef": "8",
@@ -212,7 +212,7 @@
   {
     "id": "safety_extinguisher_shielded",
     "area": "safety",
-    "question": "Are fire extinguishers and other wall-mounted items set into the wall or shielded so they do not stick out into the path?",
+    "question": "Is the path clear of things sticking out from walls, such as fire extinguishers? They should be set into the wall or shielded.",
     "whyItMatters": "Objects sticking out from a wall can injure learners who use a white cane.",
     "recommendation": "Recess wall-mounted items into the wall or shield them, with a feature that warns white cane users, so nothing sticks out into the path (Guide p. 4).",
     "guideRef": "4",
