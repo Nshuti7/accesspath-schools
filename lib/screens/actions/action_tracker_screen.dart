@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../page_text.dart';
+import '../../layout.dart';
 import '../../models/action_item.dart';
 import '../../models/gap.dart';
 import '../../providers/action_provider.dart';
@@ -11,6 +12,7 @@ import '../../widgets/info_message.dart';
 import '../../widgets/data_gate.dart';
 import '../../widgets/page_scaffold.dart';
 import 'action_card.dart';
+import 'action_table.dart';
 import 'status_sheet.dart';
 
 class ActionTrackerScreen extends StatefulWidget {
@@ -96,12 +98,17 @@ class _ActionTrackerScreenState extends State<ActionTrackerScreen> {
         ? all
         : all.where((action) => action.status == _filter).toList();
     final now = DateTime.now();
+    final isDesktop = Breakpoints.isDesktop(context);
 
     return Center(
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 720),
+        constraints: BoxConstraints(
+          maxWidth: isDesktop ? Space.maxContentWidth : 720,
+        ),
         child: ListView(
-          padding: const EdgeInsets.all(16),
+          padding: isDesktop
+              ? const EdgeInsets.fromLTRB(Space.md, 0, Space.md, Space.lg)
+              : const EdgeInsets.all(16),
           children: [
             Wrap(
               spacing: 8,
@@ -124,15 +131,23 @@ class _ActionTrackerScreenState extends State<ActionTrackerScreen> {
               const InfoMessage(AppStrings.noActionsYet)
             else if (shown.isEmpty)
               const InfoMessage(AppStrings.noActionsForFilter),
-            for (final action in shown)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: ActionCard(
-                  action: action,
-                  now: now,
-                  onTap: () => _changeStatus(action),
+            if (isDesktop && shown.isNotEmpty)
+              ActionTable(
+                actions: shown,
+                gapById: assessment.gapById,
+                now: now,
+                onOpen: _changeStatus,
+              )
+            else
+              for (final action in shown)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: ActionCard(
+                    action: action,
+                    now: now,
+                    onTap: () => _changeStatus(action),
+                  ),
                 ),
-              ),
           ],
         ),
       ),

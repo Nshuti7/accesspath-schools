@@ -5,45 +5,27 @@ import '../../models/report_summary.dart';
 import '../../services/ai_call.dart';
 import '../../strings.dart';
 import '../../widgets/form_error_text.dart';
+import 'generate_summary_button.dart';
+import 'report_summary_controller.dart';
 
-/// "Generate summary" button that turns into the AI summary. The summary lives
-/// only in this widget, so it disappears when the user leaves the page.
-class ReportSummaryCard extends StatefulWidget {
-  const ReportSummaryCard({super.key, required this.onGenerate});
+/// The AI summary, its error, and a Copy button. On phones it also holds the
+/// "Generate summary" button; on desktop that button sits in the page header.
+class ReportSummaryCard extends StatelessWidget {
+  const ReportSummaryCard({
+    super.key,
+    required this.controller,
+    this.showGenerateButton = true,
+  });
 
-  final Future<ReportSummary> Function() onGenerate;
+  final ReportSummaryController controller;
+  final bool showGenerateButton;
 
-  @override
-  State<ReportSummaryCard> createState() => _ReportSummaryCardState();
-}
-
-class _ReportSummaryCardState extends State<ReportSummaryCard> {
-  ReportSummary? _summary;
-  bool _isLoading = false;
-  AiError? _error;
-
-  Future<void> _generate() async {
-    setState(() {
-      _isLoading = true;
-      _error = null;
-    });
-    try {
-      final summary = await widget.onGenerate();
-      if (!mounted) return;
-      setState(() => _summary = summary);
-    } on AiException catch (error) {
-      if (!mounted) return;
-      setState(() => _error = error.reason);
-    } finally {
-      if (mounted) setState(() => _isLoading = false);
-    }
-  }
-
-  Future<void> _copy(ReportSummary summary) async {
+  Future<void> _copy(BuildContext context, ReportSummary summary) async {
+    final messenger = ScaffoldMessenger.of(context);
     await Clipboard.setData(ClipboardData(text: summary.toPlainText()));
-    if (!mounted) return;
-    ScaffoldMessenger.of(context)
-        .showSnackBar(const SnackBar(content: Text(AppStrings.summaryCopied)));
+    messenger.showSnackBar(
+      const SnackBar(content: Text(AppStrings.summaryCopied)),
+    );
   }
 
   static String _messageFor(AiError error) {
@@ -57,49 +39,38 @@ class _ReportSummaryCardState extends State<ReportSummaryCard> {
 
   @override
   Widget build(BuildContext context) {
-    final summary = _summary;
-    final error = _error;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        if (summary != null) ...[
-          _SummaryContent(summary: summary),
-          const SizedBox(height: 8),
-        ],
-        if (error != null) ...[
-          FormErrorText(_messageFor(error)),
-          const SizedBox(height: 8),
-        ],
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: [
-            FilledButton.icon(
-              onPressed: _isLoading ? null : _generate,
-              icon: _isLoading
-                  ? const SizedBox.square(
-                      dimension: 20,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : const Icon(Icons.auto_awesome_outlined),
-              label: Text(
-                _isLoading
-                    ? AppStrings.writingSummary
-                    : summary == null
-                    ? AppStrings.generateSummary
-                    : AppStrings.generateAgain,
-              ),
+    return ListenableBuilder(
+      listenable: controller,
+      builder: (context, _) {
+        final summary = controller.summary;
+        final error = controller.error;
+        final canCopy = summary != null && !controller.isLoading;
+        final buttons = [
+          if (showGenerateButton) GenerateSummaryButton(controller: controller),
+          if (canCopy)
+            OutlinedButton.icon(
+              onPressed: () => _copy(context, summary),
+              icon: const Icon(Icons.copy),
+              label: const Text(AppStrings.copy),
             ),
-            if (summary != null && !_isLoading)
-              OutlinedButton.icon(
-                onPressed: () => _copy(summary),
-                icon: const Icon(Icons.copy),
-                label: const Text(AppStrings.copy),
-              ),
+        ];
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            if (summary != null) ...[
+              _SummaryContent(summary: summary),
+              const SizedBox(height: 8),
+            ],
+            if (error != null) ...[
+              FormErrorText(_messageFor(error)),
+              const SizedBox(height: 8),
+            ],
+            if (buttons.isNotEmpty)
+              Wrap(spacing: 8, runSpacing: 8, children: buttons),
           ],
-        ),
-      ],
+        );
+      },
     );
   }
 }
