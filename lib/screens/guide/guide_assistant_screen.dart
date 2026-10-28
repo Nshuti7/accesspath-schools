@@ -19,6 +19,8 @@ class GuideAssistantScreen extends StatefulWidget {
 }
 
 class _GuideAssistantScreenState extends State<GuideAssistantScreen> {
+  static const _maxChatWidth = 840.0;
+
   final _inputController = TextEditingController();
   final _scrollController = ScrollController();
 
@@ -71,41 +73,48 @@ class _GuideAssistantScreenState extends State<GuideAssistantScreen> {
     return PageScaffold(
       title: AppStrings.guideAssistant,
       description: PageText.guide,
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView(
-              controller: _scrollController,
-              padding: const EdgeInsets.all(16),
-              children: [
-                if (messages.isEmpty && !chat.isWaiting)
-                  StarterQuestions(onSelected: _send),
-                for (final message in messages)
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
-                    child: ChatBubble(message: message),
-                  ),
-                if (chat.isWaiting)
-                  const Row(
-                    children: [
-                      SizedBox.square(
-                        dimension: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2),
+      // A narrow centred column keeps long answers readable on wide screens
+      // and leaves phones unchanged.
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: _maxChatWidth),
+          child: Column(
+            children: [
+              Expanded(
+                child: ListView(
+                  controller: _scrollController,
+                  padding: const EdgeInsets.all(16),
+                  children: [
+                    if (messages.isEmpty && !chat.isWaiting)
+                      StarterQuestions(onSelected: _send),
+                    for (final message in messages)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: ChatBubble(message: message),
                       ),
-                      SizedBox(width: 12),
-                      Text(AppStrings.lookingInGuide),
-                    ],
-                  ),
-                if (error != null) FormErrorText(_messageFor(error)),
-              ],
-            ),
+                    if (chat.isWaiting)
+                      const Row(
+                        children: [
+                          SizedBox.square(
+                            dimension: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          ),
+                          SizedBox(width: 12),
+                          Text(AppStrings.lookingInGuide),
+                        ],
+                      ),
+                    if (error != null) FormErrorText(_messageFor(error)),
+                  ],
+                ),
+              ),
+              ChatInputBar(
+                controller: _inputController,
+                isWaiting: chat.isWaiting,
+                onSend: () => _send(_inputController.text),
+              ),
+            ],
           ),
-          ChatInputBar(
-            controller: _inputController,
-            isWaiting: chat.isWaiting,
-            onSend: () => _send(_inputController.text),
-          ),
-        ],
+        ),
       ),
     );
   }
