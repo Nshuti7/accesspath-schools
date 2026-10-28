@@ -2,7 +2,7 @@
 /// headings. Kept apart from AppStrings so that file stays readable.
 class PageText {
   static const assess =
-      'Answer each question for every area. Answers save as you go.';
+      'Answer Yes, No or Unsure to each question. Your answers save automatically.';
   static const photoCheck =
       'Take a photo and see possible barriers to check yourself.';
   static const gaps =
