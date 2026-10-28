@@ -58,6 +58,17 @@ steps on our campus.
 - **Web:** https://gen-lang-client-0366595329.web.app
 - **Android:** download the APK from the [latest release](https://github.com/Nshuti7/accesspath-schools/releases/latest)
 
+### Install on Android
+
+1. On your phone, open the [latest release](https://github.com/Nshuti7/accesspath-schools/releases/latest)
+   and tap `app-release.apk` to download it.
+2. Open the downloaded file. The first time, Android asks you to allow installs from your
+   browser or Files app; allow it. The app is not on the Play Store yet, which is why this
+   step is needed.
+3. Tap **Install**, then open AccessPath Schools and sign up with your school's details.
+
+The app needs Android 7.0 or newer and an internet connection.
+
 ## Built with
 
 - Flutter (web and Android)
