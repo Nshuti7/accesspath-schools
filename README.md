@@ -38,15 +38,20 @@ what to fix first, and follow the fixes through.
 |---|---|
 | ![Dashboard](screenshots/dashboard.png) | ![Checklist](screenshots/checklist.png) |
 
-| Gap report with AI summary | Action tracker |
+| Photo check | Gap report with AI summary |
 |---|---|
-| ![Gap report](screenshots/gap-report.png) | ![Action tracker](screenshots/action-tracker.png) |
+| ![Photo check](screenshots/photo-check.png) | ![Gap report](screenshots/gap-report.png) |
 
-| Guide assistant | On a phone |
+| Action tracker | Guide assistant |
 |---|---|
-| ![Guide assistant](screenshots/guide-assistant.png) | <img src="screenshots/phone-dashboard.png" alt="Dashboard on a phone" width="240"> <img src="screenshots/phone-checklist.png" alt="Checklist on a phone" width="240"> |
+| ![Action tracker](screenshots/action-tracker.png) | ![Guide assistant](screenshots/guide-assistant.png) |
 
-The screenshots use a demo school with sample data.
+On a phone:
+
+<img src="screenshots/phone-dashboard.png" alt="Dashboard on a phone" width="240"> <img src="screenshots/phone-checklist.png" alt="Checklist on a phone" width="240">
+
+The screenshots use a demo school with sample data. The photo check uses a real photo of
+steps on our campus.
 
 ## Try it
 
